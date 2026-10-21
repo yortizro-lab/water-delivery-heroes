@@ -76,125 +76,76 @@ h2 {
 #families {
 
   color: #087fce;
-
   font-size: 23px;
-
   font-weight: bold;
-
 }
 
 #deliverButton {
-
   width: 100%;
-
   min-height: 58px;
-
   padding: 14px;
-
   border: none;
-
   border-radius: 16px;
-
   background: linear-gradient(135deg, #ffb52e, #ff852e);
-
   color: #402600;
-
   font-size: 18px;
-
   font-weight: bold;
-
   box-shadow: 0 5px 0 #d96c1d;
-
   cursor: pointer;
-
   touch-action: manipulation;
-
 }
 
 #deliverButton:active {
-
   transform: translateY(3px);
-
   box-shadow: 0 2px 0 #d96c1d;
-
 }
 
 #message {
-
   min-height: 48px;
-
   margin-bottom: 0;
-
   padding: 12px;
-
   border-radius: 12px;
-
   background: #dff7ff;
-
   color: #075985;
-
   font-weight: bold;
 
 }
 
 #instructions {
-
   text-align: left;
-
   background: #edffed;
-
   border-color: #b9e9b9;
-
 }
 
 #instructions h2 {
-
   text-align: center;
-
   color: #238044;
-
 }
 
 #instructions li {
-
   margin-bottom: 10px;
-
   line-height: 1.5;
-
 }
 
 footer {
-
   padding: 20px 12px;
-
   background: #123b60;
-
   color: white;
-
   font-size: 14px;
-
 }
 
 button:focus-visible {
-
   outline: 3px solid #15304b;
-
   outline-offset: 4px;
-
 }
 
 @media (max-width: 360px) {
-
   header h1 {
-
     font-size: 23px;
-
   }
 
   section {
-
     padding: 18px 12px;
-
   }
 
 }
