@@ -70,11 +70,8 @@ h2 {
 }
 
 #water,
-
 #score,
-
 #families {
-
   color: #087fce;
   font-size: 23px;
   font-weight: bold;
@@ -147,5 +144,101 @@ button:focus-visible {
   section {
     padding: 18px 12px;
   }
+}
 
+/* Responsive layout for phones, tablets, and computers */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  min-height: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+header {
+  width: 100%;
+  padding: clamp(18px, 4vw, 36px) 16px;
+}
+
+header h1 {
+  font-size: clamp(23px, 4vw, 36px);
+  overflow-wrap: anywhere;
+}
+
+header p {
+  font-size: clamp(14px, 2vw, 18px);
+}
+
+main {
+  width: 100%;
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 0 clamp(12px, 3vw, 28px);
+}
+
+section {
+  width: 100%;
+  min-width: 0;
+  padding: clamp(16px, 3vw, 28px);
+  overflow-wrap: anywhere;
+}
+
+button {
+  max-width: 100%;
+  min-height: 48px;
+  font-size: 16px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+img,
+
+video,
+
+canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Phone screens */
+@media (max-width: 600px) {
+  header h1 {
+    font-size: 25px;
+  }
+
+  main {
+    margin: 12px auto;
+    padding: 0 12px;
+  }
+
+  section {
+    margin-bottom: 14px;
+    border-radius: 16px;
+  }
+
+  #deliverButton {
+    width: 100%;
+    min-height: 54px;
+    font-size: 17px;
+  }
+}
+
+/* Larger computer screens */
+@media (min-width: 900px) {
+  main {
+    max-width: 1000px;
+  }
+
+  #game {
+    padding: 30px;
+  }
 }
