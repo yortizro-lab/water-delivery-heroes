@@ -1,0 +1,257 @@
+doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Water Delivery Heroes | Every Drop Counts</title>
+<style>
+:root{--navy:#123b55;--blue:#1d9bd1;--sky:#e8f7fc;--yellow:#ffd447;--ink:#183344;--muted:#5c7480;--green:#24845d;--red:#c94c43;--road:#d5e0e4;--white:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:#f3f8fa;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button{font:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid #ffb000;outline-offset:3px}
+header{background:var(--navy);color:white;padding:15px clamp(14px,3vw,32px);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:11px}.brand-mark{width:42px;height:42px;border-radius:50% 50% 50% 8px;transform:rotate(-45deg);background:var(--yellow);display:grid;place-items:center;color:var(--navy);font-size:23px;font-weight:900}.brand-mark span{transform:rotate(45deg)}.brand h1{font-size:clamp(17px,2.5vw,23px);margin:0;line-height:1.1}.brand small{display:block;color:#c9e6f2;font-size:11px;letter-spacing:1.7px;margin-top:4px}
+.header-pill{border:1px solid #5d8194;border-radius:999px;padding:8px 12px;font-size:12px;color:#e5f5fb}
+main{max-width:1180px;margin:0 auto;padding:22px 16px 36px}
+.intro{display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:18px;flex-wrap:wrap}.eyebrow{font-size:11px;letter-spacing:1.8px;color:#1478a4;font-weight:850}.intro h2{font-size:clamp(25px,4vw,36px);margin:5px 0 6px;color:var(--navy)}.intro p{margin:0;color:var(--muted);max-width:650px;line-height:1.5}.level-tag{background:#fff4c6;border:1px solid #f2d66d;border-radius:12px;padding:10px 14px;font-weight:800;color:#6d5410;white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}.stat{background:white;border:1px solid #dce8ec;border-radius:15px;padding:13px 15px;box-shadow:0 3px 10px #18334408}.stat-label{font-size:11px;letter-spacing:1px;color:var(--muted);font-weight:800;text-transform:uppercase}.stat-value{font-size:clamp(21px,3vw,28px);font-weight:900;color:var(--navy);margin-top:4px}.stat-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.game-layout{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(265px,.8fr);gap:16px;align-items:start}.panel{background:white;border:1px solid #dce8ec;border-radius:18px;overflow:hidden;box-shadow:0 5px 18px #123b550a}.panel-head{padding:15px 17px;border-bottom:1px solid #e5eef1;display:flex;align-items:center;justify-content:space-between;gap:10px}.panel-head h3{font-size:16px;margin:0;color:var(--navy)}.panel-head small{color:var(--muted)}
+.map-wrap{position:relative;background:#eaf4e8;padding:8px;touch-action:pan-y}.map-wrap svg{display:block;width:100%;height:auto;user-select:none;touch-action:none;border-radius:12px}.map-hint{padding:10px 14px;font-size:12px;line-height:1.45;color:#536d78;background:#f8fbfc;border-top:1px solid #e5eef1}.map-hint strong{color:var(--navy)}
+.road{stroke:var(--road);stroke-width:23;stroke-linecap:round;stroke-linejoin:round;fill:none}.road-center{stroke:white;stroke-width:2;stroke-dasharray:8 9;fill:none;opacity:.95}.blocked{stroke:#d7a7a0;stroke-width:23;stroke-linecap:round;fill:none}.route-line{stroke:#168fc4;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;fill:none;opacity:.95;pointer-events:none}.route-glow{stroke:#fff;stroke-width:2;stroke-dasharray:4 8;fill:none;pointer-events:none}
+.node{cursor:grab;touch-action:none}.node:active{cursor:grabbing}.node circle{stroke:white;stroke-width:4;filter:drop-shadow(0 2px 2px #123b5525)}.node text{font-family:inherit;font-weight:800;fill:#173c50;font-size:11px;paint-order:stroke;stroke:#eaf4e8;stroke-width:4px;stroke-linejoin:round}.node .tiny{font-size:9px;font-weight:700}.node.delivered circle{fill:#6fc99b!important}.node.selected circle{stroke:#ffce37;stroke-width:6}.obstacle-label{font-size:10px;font-weight:900;fill:#8b3d34}
+.side{display:grid;gap:14px}.side-content{padding:15px 16px}.mission{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid #edf2f4}.mission:last-child{border-bottom:0}.mission-icon{width:39px;height:39px;display:grid;place-items:center;border-radius:12px;background:var(--sky);font-size:20px;flex-shrink:0}.mission h4{margin:1px 0 3px;font-size:14px}.mission p{margin:0;font-size:12px;color:var(--muted);line-height:1.4}.mission .amount{font-weight:850;color:#1279a5}.status{margin-top:12px;padding:11px 12px;background:#eff8fb;border-radius:12px;font-size:12px;line-height:1.45;color:#345d6d}.status strong{display:block;color:var(--navy);margin-bottom:3px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.btn{border:0;border-radius:11px;padding:11px 12px;font-weight:850;font-size:13px;transition:transform .12s,filter .12s}.btn:active{transform:scale(.98)}.btn-primary{background:var(--blue);color:white}.btn-dark{background:var(--navy);color:white}.btn-light{background:#eef5f7;color:var(--navy);border:1px solid #d7e5e9}.btn-yellow{background:var(--yellow);color:#443800}.btn:disabled{opacity:.45;cursor:not-allowed}
+.legend{display:flex;flex-wrap:wrap;gap:12px;padding:12px 16px;border-top:1px solid #e5eef1;font-size:11px;color:var(--muted)}.legend span{display:flex;align-items:center;gap:5px}.dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.tip{font-size:12px;color:var(--muted);line-height:1.5;margin:0}.howto{padding:14px 16px;background:#fff9df;border:1px solid #f3e3a3;border-radius:14px;font-size:12px;line-height:1.5;color:#69561a}.howto b{color:#4c3e0b}
+footer{text-align:center;padding:20px 14px;color:#6a818a;font-size:11px;line-height:1.6}.footer-brand{font-weight:900;color:var(--navy);letter-spacing:1px}
+.overlay{position:fixed;inset:0;background:#092b3ddd;display:none;align-items:center;justify-content:center;padding:20px;z-index:10}.overlay.show{display:flex}.modal{background:white;border-radius:22px;padding:28px 24px;max-width:420px;width:100%;text-align:center;box-shadow:0 18px 80px #001a2a55}.celebrate{font-size:52px}.modal h2{color:var(--navy);margin:8px 0}.modal p{color:var(--muted);line-height:1.55}.modal-score{font-size:35px;font-weight:950;color:#1284b2;margin:12px}
+@media(max-width:780px){.game-layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.side{grid-template-columns:1fr}.intro{align-items:start}.map-wrap{padding:4px}}
+@media(max-width:420px){main{padding:15px 10px 25px}.stat{padding:11px}.panel-head{padding:13px}.map-hint{font-size:11px}.brand small{letter-spacing:1px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><div class="brand-mark"><span>💧</span></div><div><h1>WATER DELIVERY HEROES</h1><small>EVERY DROP COUNTS</small></div></div>
+  <div class="header-pill">A clean-water learning game</div>
+</header>
+<main>
+  <section class="intro">
+    <div><div class="eyebrow">COMMUNITY MISSION 01</div><h2>Help the Village</h2><p>Drag a route from the water station through the road junctions to deliver clean water. The clinic is the urgent stop—plan carefully and save every drop!</p></div>
+    <div class="level-tag">⭐ LEVEL 1 · BEGINNER</div>
+  </section>
+  <section class="stats" aria-label="Game statistics">
+    <div class="stat"><div class="stat-label">Score</div><div class="stat-value" id="score">0</div><div class="stat-sub">Points earned</div></div>
+    <div class="stat"><div class="stat-label">Clean water</div><div class="stat-value" id="water">100 L</div><div class="stat-sub" id="waterSub">100 liters available</div></div>
+    <div class="stat"><div class="stat-label">Time left</div><div class="stat-value" id="time">90s</div><div class="stat-sub">Finish before time runs out</div></div>
+    <div class="stat"><div class="stat-label">Deliveries</div><div class="stat-value" id="deliveries">0/3</div><div class="stat-sub">Home · School · Clinic</div></div>
+  </section>
+  <div class="game-layout">
+    <section class="panel">
+      <div class="panel-head"><h3>🗺️ Delivery map</h3><small id="routeCount">Route: not started</small></div>
+      <div class="map-wrap">
+        <svg id="map" viewBox="0 0 640 470" role="img" aria-label="Top-down village map. Drag from the water station through connected road junctions to destinations.">
+          <rect x="0" y="0" width="640" height="470" rx="12" fill="#eaf4e8"/>
+          <g fill="#d9ebd3"><rect x="18" y="18" width="130" height="90" rx="15"/><rect x="410" y="20" width="205" height="92" rx="15"/><rect x="20" y="345" width="145" height="103" rx="15"/><rect x="450" y="350" width="165" height="95" rx="15"/></g>
+          <g fill="#b6d8a9" opacity=".8"><circle cx="70" cy="54" r="14"/><circle cx="106" cy="78" r="10"/><circle cx="553" cy="53" r="15"/><circle cx="586" cy="78" r="10"/><circle cx="70" cy="397" r="15"/><circle cx="110" cy="422" r="10"/><circle cx="553" cy="389" r="14"/><circle cx="589" cy="417" r="11"/></g>
+          <!-- Road network -->
+          <path class="road" d="M65 235 H575 M170 75 V390 M320 75 V390 M470 75 V390 M65 135 H575 M65 335 H575"/>
+          <path class="road-center" d="M65 235 H575 M170 75 V390 M320 75 V390 M470 75 V390 M65 135 H575 M65 335 H575"/>
+          <!-- Blocked road, with alternate route around it -->
+          <path class="blocked" d="M320 135 V205"/>
+          <g transform="translate(320 169)"><rect x="-18" y="-14" width="36" height="28" rx="5" fill="#c94c43" stroke="#fff" stroke-width="3"/><path d="M-11 -8 L11 8 M11 -8 L-11 8" stroke="#fff" stroke-width="4" stroke-linecap="round"/></g>
+          <text x="339" y="172" class="obstacle-label">ROAD CLOSED</text>
+          <!-- Buildings -->
+          <g transform="translate(65 62)"><rect x="-24" y="-14" width="48" height="34" rx="4" fill="#ffd6a5" stroke="#bd8a54" stroke-width="2"/><path d="M-29 -14 L0 -34 L29 -14Z" fill="#dc835d"/><rect x="-6" y="0" width="12" height="20" fill="#fff2d9"/><rect x="-19" y="-6" width="10" height="10" fill="#8ed2e6"/><rect x="9" y="-6" width="10" height="10" fill="#8ed2e6"/></g>
+          <g transform="translate(560 63)"><rect x="-30" y="-18" width="60" height="38" rx="4" fill="#c6e7f6" stroke="#5797b7" stroke-width="2"/><path d="M-34 -18 L0 -38 L34 -18Z" fill="#4d9fbd"/><rect x="-5" y="2" width="10" height="18" fill="#fff"/><rect x="-20" y="-9" width="12" height="12" fill="#fff"/><rect x="8" y="-9" width="12" height="12" fill="#fff"/></g>
+          <g transform="translate(560 405)"><rect x="-32" y="-17" width="64" height="35" rx="4" fill="#d8c9f5" stroke="#8c78bd" stroke-width="2"/><path d="M-36 -17 L0 -36 L36 -17Z" fill="#927bc6"/><rect x="-5" y="0" width="10" height="18" fill="#fff"/><rect x="-23" y="-9" width="12" height="10" fill="#fff"/><rect x="11" y="-9" width="12" height="10" fill="#fff"/></g>
+          <g transform="translate(65 405)"><rect x="-26" y="-17" width="52" height="35" rx="4" fill="#f5d1d8" stroke="#c47b8b" stroke-width="2"/><path d="M-30 -17 L0 -35 L30 -17Z" fill="#c47b8b"/><rect x="-5" y="0" width="10" height="18" fill="#fff"/></g>
+          <!-- Main route draws above road and below nodes -->
+          <polyline id="routeLine" class="route-line" points=""/>
+          <polyline id="routeDashes" class="route-glow" points=""/>
+          <!-- Nodes on roads -->
+          <g id="nodes">
+            <g class="node" data-node="station" transform="translate(65 235)"><circle r="20" fill="#147da5"/><text x="0" y="4" text-anchor="middle" fill="#fff" style="fill:white;stroke:none;font-size:19px">🚰</text><text x="0" y="-30" text-anchor="middle">WATER STATION</text><text class="tiny" x="0" y="37" text-anchor="middle">START</text></g>
+            <g class="node" data-node="a" transform="translate(170 235)"><circle r="13" fill="#fff" stroke="#8daab5"/><text x="0" y="4" text-anchor="middle" style="stroke:none;font-size:13px">•</text></g>
+            <g class="node" data-node="b" transform="translate(320 235)"><circle r="13" fill="#fff" stroke="#8daab5"/><text x="0" y="4" text-anchor="middle" style="stroke:none;font-size:13px">•</text></g>
+            <g class="node" data-node="c" transform="translate(470 235)"><circle r="13" fill="#fff" stroke="#8daab5"/><text x="0" y="4" text-anchor="middle" style="stroke:none;font-size:13px">•</text></g>
+            <g class="node" data-node="d" transform="translate(170 135)"><circle r="13" fill="#fff" stroke="#8daab5"/><text x="0" y="4" text-anchor="middle" style="stroke:none;font-size:13px">•</text></g>
+            <g class="node" data-node="e" transform="translate(320 135)"><circle r="13" fill="#fff" stroke="#8daab5"/><text x="0" y="4" text-anchor="middle" style="stroke:none;font-size:13px">•</text></g>
+            <g class="node" data-node="f" transform="translate(470 135)"><circle r="13" fill="#fff" stroke="#8daab5"/><text x="0" y="4" text-anchor="middle" style="stroke:none;font-size:13px">•</text></g>
+            <g class="node" data-node="g" transform="translate(170 335)"><circle r="13" fill="#fff" stroke="#8daab5"/><text x="0" y="4" text-anchor="middle" style="stroke:none;font-size:13px">•</text></g>
+            <g class="node" data-node="h" transform="translate(320 335)"><circle r="13" fill="#fff" stroke="#8daab5"/><text x="0" y="4" text-anchor="middle" style="stroke:none;font-size:13px">•</text></g>
+            <g class="node" data-node="i" transform="translate(470 335)"><circle r="13" fill="#fff" stroke="#8daab5"/><text x="0" y="4" text-anchor="middle" style="stroke:none;font-size:13px">•</text></g>
+            <g class="node" data-node="home" transform="translate(170 390)"><circle r="17" fill="#f5ad57"/><text x="0" y="5" text-anchor="middle" style="stroke:none;font-size:17px">⌂</text><text x="0" y="31" text-anchor="middle">HOME · 20 L</text></g>
+            <g class="node" data-node="school" transform="translate(470 75)"><circle r="17" fill="#e7bd37"/><text x="0" y="5" text-anchor="middle" style="stroke:none;font-size:17px">S</text><text x="0" y="-26" text-anchor="middle">SCHOOL · 30 L</text></g>
+            <g class="node" data-node="clinic" transform="translate(470 390)"><circle r="19" fill="#dc766d"/><text x="0" y="6" text-anchor="middle" style="stroke:none;font-size:19px;fill:white">+</text><text x="0" y="35" text-anchor="middle">URGENT CLINIC · 40 L</text></g>
+          </g>
+        </svg>
+      </div>
+      <div class="map-hint"><strong>How to play:</strong> Press and drag from the blue water station along the road junctions. Visit the clinic first, then the school and home. Avoid the red blocked road. Tap <strong>Deliver</strong> when your route is ready.</div>
+      <div class="legend"><span><i class="dot" style="background:#147da5"></i> Start</span><span><i class="dot" style="background:#e7bd37"></i> School</span><span><i class="dot" style="background:#dc766d"></i> Urgent clinic</span><span><i class="dot" style="background:#f5ad57"></i> Home</span><span>🚧 Blocked road</span></div>
+    </section>
+    <aside class="side">
+      <section class="panel">
+        <div class="panel-head"><h3>📋 Mission checklist</h3><small id="missionState">In progress</small></div>
+        <div class="side-content">
+          <div class="mission"><div class="mission-icon">🏥</div><div><h4>1. Urgent clinic delivery</h4><p>Deliver <span class="amount">40 liters</span> to the clinic first.</p></div></div>
+          <div class="mission"><div class="mission-icon">🏫</div><div><h4>2. Supply the school</h4><p>Deliver <span class="amount">30 liters</span> to the school.</p></div></div>
+          <div class="mission"><div class="mission-icon">🏠</div><div><h4>3. Help a family</h4><p>Deliver <span class="amount">20 liters</span> to the home.</p></div></div>
+          <div class="status" id="status" role="status" aria-live="polite"><strong>Ready, hero?</strong> Drag from the station to begin planning your route.</div>
+          <div class="actions">
+            <button class="btn btn-primary" id="deliverBtn" disabled>Deliver water</button>
+            <button class="btn btn-light" id="undoBtn">Undo route</button>
+            <button class="btn btn-yellow" id="resetBtn">↻ Reset game</button>
+            <button class="btn btn-dark" id="helpBtn">How to play</button>
+          </div>
+        </div>
+      </section>
+      <section class="panel">
+        <div class="panel-head"><h3>💡 Hero tip</h3></div>
+        <div class="side-content"><p class="tip">The shortest route is not always the safest. The red road is blocked, so use the junctions to go around it. The clinic is the top priority—deliver there first to earn a bonus!</p></div>
+      </section>
+      <div class="howto"><b>Why water matters</b><br>Reliable access to clean water supports health, learning, and daily life. This prototype is an educational game; scores and virtual deliveries do not represent real donations.</div>
+    </aside>
+  </div>
+</main>
+<footer><div class="footer-brand">WATER DELIVERY HEROES</div>Inspired by clean-water advocacy. This is an independent educational prototype, not an official charity: water product.</footer>
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal"><div class="celebrate" id="celebrateIcon">🎉</div><h2 id="modalTitle">Mission complete!</h2><p id="modalText">You delivered clean water to the community.</p><div class="modal-score" id="finalScore">0 points</div><button class="btn btn-primary" id="playAgain">Play again</button></div></div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const svg = $('map');
+  const NS = 'http://www.w3.org/2000/svg';
+  const points = {
+    station:[65,235], a:[170,235], b:[320,235], c:[470,235],
+    d:[170,135], e:[320,135], f:[470,135],
+    g:[170,335], h:[320,335], i:[470,335],
+    home:[170,390], school:[470,75], clinic:[470,390]
+  };
+  const edges = [
+    ['station','a'],['a','b'],['b','c'],['a','d'],['d','e'],['e','f'],['f','school'],
+    ['c','f'],['c','i'],['i','clinic'],['g','home'],['g','a'],['g','h'],['h','i'],
+    ['b','h'],['d','a'],['e','b'],['f','c'],['i','c'],['a','g'],['h','b'],
+    ['d','e'],['e','f'],['c','i'],['i','h'],['h','g'],['g','home']
+  ];
+  const blocked = new Set(['b|e','e|b']);
+  const destinations = {clinic:40,school:30,home:20};
+  let route = [], score = 0, water = 100, timeLeft = 90, delivered = new Set();
+  let timer = null, active = false, finished = false, dragging = false, lastTick = Date.now();
+  const edgeKey = (a,b) => [a,b].sort().join('|');
+  const connected = (a,b) => edges.some(([x,y]) => (x===a&&y===b)||(x===b&&y===a));
+  const isBlocked = (a,b) => blocked.has(a+'|'+b) || blocked.has(b+'|'+a);
+  const validStep = (a,b) => connected(a,b) && !isBlocked(a,b);
+  function setStatus(title,msg){$('status').innerHTML='<strong>'+title+'</strong>'+msg}
+  function renderStats(){
+    $('score').textContent=score;
+    $('water').textContent=water+' L';
+    $('waterSub').textContent=water+' liters available';
+    $('time').textContent=timeLeft+'s';
+    $('deliveries').textContent=delivered.size+'/3';
+    $('routeCount').textContent=route.length>1?'Route: '+(route.length-1)+' road segments':'Route: not started';
+    $('deliverBtn').disabled=finished || route.length<2;
+    document.querySelectorAll('.node[data-node]').forEach(n=>{
+      const id=n.dataset.node;
+      n.classList.toggle('selected',route.includes(id));
+      n.classList.toggle('delivered',delivered.has(id));
+    });
+  }
+  function drawRoute(){
+    const coords=route.map(id=>points[id].join(',')).join(' ');
+    $('routeLine').setAttribute('points',coords);
+    $('routeDashes').setAttribute('points',coords);
+    renderStats();
+  }
+  function nearestNode(evt){
+    const rect=svg.getBoundingClientRect();
+    const x=(evt.clientX-rect.left)*640/rect.width, y=(evt.clientY-rect.top)*470/rect.height;
+    let best=null,dist=Infinity;
+    Object.entries(points).forEach(([id,p])=>{const d=Math.hypot(p[0]-x,p[1]-y);if(d<dist){best=id;dist=d}});
+    return dist<30?best:null;
+  }
+  function beginRoute(id){
+    if(finished)return;
+    if(id!=='station'){setStatus('Start at the water station','Press and drag from the blue station to plan a route.');return}
+    route=['station'];dragging=true;active=true;drawRoute();setStatus('Route started','Follow connected road junctions. Avoid blocked roads and include all three destinations.');
+    if(!timer) startTimer();
+  }
+  function extendRoute(id){
+    if(!dragging || !id || finished)return;
+    const current=route[route.length-1];
+    if(id===current)return;
+    if(route.length>1 && id===route[route.length-2]){route.pop();drawRoute();return}
+    if(destinations[id] && route.includes(id)){return}
+    if(!validStep(current,id)){
+      setStatus('Road not available','That move is not connected by an open road. Try another junction.');return;
+    }
+    route.push(id);drawRoute();
+    if(destinations[id]) setStatus(id==='clinic'?'Urgent clinic reached!':'Destination reached!', 'Keep planning the route, then press Deliver water.');
+    else if(route.length>1)setStatus('Good route planning','Continue along the roads to the next destination.');
+  }
+  function endDrag(){dragging=false}
+  svg.addEventListener('pointerdown',e=>{
+    const id=nearestNode(e);
+    if(!id)return;
+    e.preventDefault();
+    if(!active || route.length===0)beginRoute(id);
+    else if(id==='station' && route.length>1){route=['station'];drawRoute();dragging=true}
+    else {dragging=true;extendRoute(id)}
+    try{svg.setPointerCapture(e.pointerId)}catch(_){}
+  });
+  svg.addEventListener('pointermove',e=>{if(!dragging)return;const id=nearestNode(e);if(id)extendRoute(id)});
+  svg.addEventListener('pointerup',endDrag);
+  svg.addEventListener('pointercancel',endDrag);
+  $('undoBtn').addEventListener('click',()=>{if(finished)return;if(route.length>1){route.pop();drawRoute();setStatus('Route updated','You removed the last road segment.')}else{route=[];active=false;drawRoute();setStatus('Route cleared','Drag from the water station to begin again.')}});
+  $('deliverBtn').addEventListener('click',()=>{
+    if(finished || route.length<2)return;
+    const stops=route.filter(id=>destinations[id]);
+    const unique=[...new Set(stops)];
+    if(unique.length!==3 || !['clinic','school','home'].every(x=>unique.includes(x))){
+      score=Math.max(0,score-5);renderStats();setStatus('Incomplete route','Visit the clinic, school, and home before delivering. -5 points for the incomplete attempt.');return;
+    }
+    if(stops[0]!=='clinic'){
+      score=Math.max(0,score-10);renderStats();setStatus('Priority missed','The clinic must be your first delivery. -10 points. Adjust your route and try again.');return;
+    }
+    const segments=route.length-1;
+    const waterCost=Object.values(destinations).reduce((a,b)=>a+b,0);
+    if(water<waterCost){setStatus('Not enough water','Reset the game to refill the tank.');return}
+    water-=waterCost;
+    delivered=new Set(unique);
+    const routeBonus=Math.max(0,50-(segments*2));
+    const timeBonus=Math.floor(timeLeft/3);
+    const bonus=30+routeBonus+timeBonus;
+    score+=150+bonus;
+    renderStats();
+    finished=true;clearInterval(timer);timer=null;
+    $('missionState').textContent='Complete!';
+    setStatus('Mission successful!','All deliveries completed. You protected the clinic priority and delivered without spills.');
+    $('celebrateIcon').textContent='🎉💧🏆';
+    $('modalTitle').textContent='You are a Water Hero!';
+    $('modalText').textContent='You delivered 90 liters of clean water to the clinic, school, and home. Great route planning!';
+    $('finalScore').textContent=score+' points';
+    $('overlay').classList.add('show');
+  });
+  function startTimer(){
+    lastTick=Date.now();
+    timer=setInterval(()=>{
+      if(finished)return;
+      const now=Date.now();
+      if(now-lastTick>=950){timeLeft=Math.max(0,timeLeft-1);lastTick=now;renderStats()}
+      if(timeLeft<=0){clearInterval(timer);timer=null;finished=true;dragging=false;$('missionState').textContent='Time up';setStatus('Time is up!','Reset the game and try a faster route.');$('celebrateIcon').textContent='⏱️';$('modalTitle').textContent='Time is up!';$('modalText').textContent='The community is still waiting. Reset and plan a quicker route.';$('finalScore').textContent=score+' points';$('overlay').classList.add('show');}
+    },250);
+  }
+  $('resetBtn').addEventListener('click',resetGame);
+  $('playAgain').addEventListener('click',()=>{$('overlay').classList.remove('show');resetGame()});
+  $('helpBtn').addEventListener('click',()=>{setStatus('How to play','1) Drag from the blue water station. 2) Follow connected junctions. 3) Visit clinic first, then school and home. 4) Press Deliver water. Avoid the red blocked road and beat the timer.')});
+  function resetGame(){
+    clearInterval(timer);timer=null;route=[];score=0;water=100;timeLeft=90;delivered=new Set();active=false;finished=false;dragging=false;
+    $('missionState').textContent='In progress';$('overlay').classList.remove('show');
+    drawRoute();setStatus('Ready, hero?','Drag from the station to begin planning your route.');
+  }
+  // Show a clear visual state on pointer interaction; make touch and mouse work.
+  document.querySelectorAll('.node').forEach(node=>node.addEventListener('pointerdown',()=>{if(!finished)node.style.opacity='1'}));
+  renderStats();
+})();
+</script>
+</body>
+</html>
