@@ -5,12 +5,15 @@ let water = totalWater;
 let score = 0;
 let families = 0;
 
+const progressText = document.getElementById("progressText");
+const progressFill = document.getElementById("progressFill");
+const deliveryProgress = document.getElementById("deliveryProgress");
 const waterDisplay = document.getElementById("water");
 const scoreDisplay = document.getElementById("score");
 const familiesDisplay = document.getElementById("families");
 const messageDisplay = document.getElementById("message");
 const deliverButton = document.getElementById("deliverButton");
-
+const progressText = document.getElementById("progressText");
 const deliveryTruck = document.getElementById("deliveryTruck");
 const truckMessage = document.getElementById("truckMessage");
 const playAgainButton = document.getElementById("playAgainButton");
@@ -19,6 +22,13 @@ function updateDisplay() {
   waterDisplay.textContent = water;
   scoreDisplay.textContent = score;
   familiesDisplay.textContent = families;
+
+  const delivered = 10 - water;
+  const percent = delivered * 10;
+
+  progressText.textContent = percent + "%";
+  progressFill.style.width = percent + "%";
+  deliveryProgress.setAttribute("aria-valuenow", delivered); 
 }
 
 deliverButton.addEventListener("click", function () {
