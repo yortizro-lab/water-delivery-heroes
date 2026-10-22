@@ -142,12 +142,6 @@ button:focus-visible {
   }
 }
 
-/* Responsive layout for phones, tablets, and computers */
-
-* {
-  box-sizing: border-box;
-}
-
 html {
   width: 100%;
   min-height: 100%;
@@ -156,7 +150,6 @@ html {
 body {
   width: 100%;
   min-width: 0;
-  margin: 0;
   overflow-x: hidden;
 }
 
@@ -177,7 +170,6 @@ header p {
 main {
   width: 100%;
   max-width: 1000px;
-  margin: 20px auto;
   padding: 0 clamp(12px, 3vw, 28px);
 }
 
@@ -205,7 +197,6 @@ canvas {
   height: auto;
 }
 
-/* Phone screens */
 @media (max-width: 600px) {
   header h1 {
     font-size: 25px;
@@ -215,7 +206,7 @@ canvas {
     margin: 12px auto;
     padding: 0 12px;
   }
-o
+
   section {
     margin-bottom: 14px;
     border-radius: 16px;
@@ -257,4 +248,163 @@ o
 
 #playAgainButton[hidden] {
   display: none;
+}
+
+/* Water Delivery Heroes animations */
+
+.delivery-scene {
+  width: 100%;
+  max-width: 600px;
+  margin: 18px auto;
+  padding: 10px 0;
+  overflow: hidden;
+}
+
+.water-drops {
+  position: relative;
+  height: 65px;
+  overflow: hidden;
+}
+
+.water-drop {
+  position: absolute;
+  top: 42px;
+  left: 50%;
+  font-size: 25px;
+  opacity: 0;
+  animation: water-float 2.4s ease-in-out infinite;
+}
+
+.drop-one {
+  margin-left: -90px;
+  animation-delay: 0s;
+}
+
+.drop-two {
+  margin-left: -45px;
+  animation-delay: 0.5s;
+}
+
+.drop-three {
+  margin-left: 0;
+  animation-delay: 1s;
+}
+
+.drop-four {
+  margin-left: 45px;
+  animation-delay: 1.5s;
+}
+
+.drop-five {
+  margin-left: 90px;
+  animation-delay: 2s;
+}
+
+@keyframes water-float {
+  0% {
+    transform: translateY(15px) scale(0.7);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-45px) scale(1.15);
+    opacity: 0;
+  }
+}
+
+.road {
+  position: relative;
+  height: 76px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #d8e6ed;
+  border-bottom: 5px solid #9cb3c0;
+}
+
+.road::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 35px;
+  border-top: 3px dashed white;
+}
+
+.delivery-truck {
+  position: absolute;
+  z-index: 1;
+  left: 8px;
+  top: 7px;
+  font-size: 45px;
+  line-height: 1.2;
+  transform: translateX(0);
+}
+
+.delivery-truck.driving {
+  animation: truck-drive 1.5s ease-in-out;
+}
+
+@keyframes truck-drive {
+  0% {
+    left: 8px;
+    transform: translateX(0) scaleX(1);
+  }
+  45% {
+    left: calc(100% - 65px);
+    transform: translateX(0) scaleX(1);
+  }
+  55% {
+    left: calc(100% - 65px);
+    transform: translateX(0) scaleX(-1);
+  }
+  100% {
+    left: 8px;
+    transform: translateX(0) scaleX(-1);
+  }
+}
+
+.truck-message {
+  margin: 10px 0;
+  color: #087fce;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Keep animations comfortable on smaller screens */
+@media (max-width: 600px) {
+  .delivery-scene {
+    max-width: 100%;
+  }
+
+  .water-drops {
+    height: 58px;
+  }
+
+  .road {
+    height: 68px;
+  }
+
+  .road::after {
+    top: 31px;
+  }
+
+  .delivery-truck {
+    top: 5px;
+    font-size: 42px;
+  }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .water-drop {
+    animation: none;
+    opacity: 0.8;
+    top: 10px;
+  }
+
+  .delivery-truck.driving {
+    animation: none;
+  }
 }

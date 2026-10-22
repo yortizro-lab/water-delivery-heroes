@@ -11,6 +11,10 @@ const familiesDisplay = document.getElementById("families");
 const messageDisplay = document.getElementById("message");
 const deliverButton = document.getElementById("deliverButton");
 
+const deliveryTruck = document.getElementById("deliveryTruck");
+const truckMessage = document.getElementById("truckMessage");
+const playAgainButton = document.getElementById("playAgainButton");
+
 function updateDisplay() {
   waterDisplay.textContent = water;
   scoreDisplay.textContent = score;
@@ -19,6 +23,16 @@ function updateDisplay() {
 
 deliverButton.addEventListener("click", function () {
   if (water <= 0) return;
+  
+  // Animate the delivery truck
+  deliveryTruck.classList.remove("driving");
+
+  // Restart animation for each delivery
+  void deliveryTruck.offsetWidth;
+
+  deliveryTruck.classList.add("driving");
+  truckMessage.textContent =
+    "🚚 Delivering clean water to a family!";
 
   water--;
   score += 10;
@@ -40,7 +54,7 @@ deliverButton.addEventListener("click", function () {
 });
 
 playAgainButton.addEventListener("click", function () {
-  water = 10;
+  water = totalWater;
   score = 0;
   families = 0;
 

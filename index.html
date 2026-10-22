@@ -24,11 +24,33 @@
     </section>
 
     <section id="game">
+      <div class="delivery-scene" aria-label="Water delivery animation">
+  <div class="water-drops" aria-hidden="true">
+    <span class="water-drop drop-one">💧</span>
+    <span class="water-drop drop-two">💧</span>
+    <span class="water-drop drop-three">💧</span>
+    <span class="water-drop drop-four">💧</span>
+    <span class="water-drop drop-five">💧</span>
+  </div>
+
+  <div class="road">
+    <div id="deliveryTruck" class="delivery-truck"
+         role="img" aria-label="Water delivery truck">
+      🚚
+    </div>
+  </div>
+
+  <p id="truckMessage" class="truck-message" aria-live="polite">
+    Your water hero is ready to deliver!
+  </p>
+</div>
+
       <h2>💧 Water Supply</h2>
       <p>Water remaining: <span id="water">10</span></p>
       <p>Score: <span id="score">0</span></p>
       <p>Families helped: <span id="families">0</span></p>
       <button id="deliverButton" type="button">Deliver Water</button>
+      <button id="playAgainButton" type="button" hidden>Play Again</button>
       <p id="message" aria-live="polite">Ready to make a difference?</p>
     </section>
 
