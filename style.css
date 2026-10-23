@@ -66,32 +66,49 @@ h2 {
   line-height: 1.5;
 }
 
+#game .game-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 16px;
+}
+
+#game .game-stats p {
+  margin: 4px 0;
+}
+
+.mode-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 4px;
+  color: #075985;
+  font-weight: bold;
+}
+
+#drivingMode {
+  padding: 8px 10px;
+  border: 2px solid #8bdcf4;
+  border-radius: 8px;
+  background: #fff;
+  color: #15304b;
+  font: inherit;
+}
+
 #water,
 #score,
+#timer,
 #families {
   color: #087fce;
   font-size: 23px;
   font-weight: bold;
 }
 
-#deliverButton {
-  width: 100%;
-  min-height: 58px;
-  padding: 14px;
-  border: none;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #ffb52e, #ff852e);
-  color: #402600;
-  font-size: 18px;
-  font-weight: bold;
-  box-shadow: 0 5px 0 #d96c1d;
-  cursor: pointer;
-  touch-action: manipulation;
+#timer {
+  color: #c2410c;
 }
 
-#deliverButton:active {
-  transform: translateY(3px);
-  box-shadow: 0 2px 0 #d96c1d;
+#timer.time-warning {
+  color: #dc2626;
 }
 
 #message {
@@ -212,10 +229,8 @@ canvas {
     border-radius: 16px;
   }
 
-  #deliverButton {
-    width: 100%;
-    min-height: 54px;
-    font-size: 17px;
+  #game .game-stats {
+    gap: 4px 8px;
   }
 }
 
@@ -250,164 +265,6 @@ canvas {
   display: none;
 }
 
-/* Water Delivery Heroes animations */
-
-.delivery-scene {
-  width: 100%;
-  max-width: 600px;
-  margin: 18px auto;
-  padding: 10px 0;
-  overflow: hidden;
-}
-
-.water-drops {
-  position: relative;
-  height: 65px;
-  overflow: hidden;
-}
-
-.water-drop {
-  position: absolute;
-  top: 42px;
-  left: 50%;
-  font-size: 25px;
-  opacity: 0;
-  animation: water-float 2.4s ease-in-out infinite;
-}
-
-.drop-one {
-  margin-left: -90px;
-  animation-delay: 0s;
-}
-
-.drop-two {
-  margin-left: -45px;
-  animation-delay: 0.5s;
-}
-
-.drop-three {
-  margin-left: 0;
-  animation-delay: 1s;
-}
-
-.drop-four {
-  margin-left: 45px;
-  animation-delay: 1.5s;
-}
-
-.drop-five {
-  margin-left: 90px;
-  animation-delay: 2s;
-}
-
-@keyframes water-float {
-  0% {
-    transform: translateY(15px) scale(0.7);
-    opacity: 0;
-  }
-  25% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-45px) scale(1.15);
-    opacity: 0;
-  }
-}
-
-.road {
-  position: relative;
-  height: 76px;
-  overflow: hidden;
-  border-radius: 14px;
-  background: #d8e6ed;
-  border-bottom: 5px solid #9cb3c0;
-}
-
-.road::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 35px;
-  border-top: 3px dashed white;
-}
-
-.delivery-truck {
-  position: absolute;
-  z-index: 1;
-  left: 8px;
-  top: 7px;
-  font-size: 45px;
-  line-height: 1.2;
-  transform: translateX(0);
-}
-
-.delivery-truck.driving {
-  animation: truck-drive 1.5s ease-in-out;
-}
-
-@keyframes truck-drive {
-  0% {
-    left: 8px;
-    transform: translateX(0) scaleX(1);
-  }
-  45% {
-    left: calc(100% - 65px);
-    transform: translateX(0) scaleX(1);
-  }
-  55% {
-    left: calc(100% - 65px);
-    transform: translateX(0) scaleX(-1);
-  }
-  100% {
-    left: 8px;
-    transform: translateX(0) scaleX(-1);
-  }
-}
-
-.truck-message {
-  margin: 10px 0;
-  color: #087fce;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-/* Keep animations comfortable on smaller screens */
-@media (max-width: 600px) {
-  .delivery-scene {
-    max-width: 100%;
-  }
-
-  .water-drops {
-    height: 58px;
-  }
-
-  .road {
-    height: 68px;
-  }
-
-  .road::after {
-    top: 31px;
-  }
-
-  .delivery-truck {
-    top: 5px;
-    font-size: 42px;
-  }
-}
-
-/* Respect reduced-motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  .water-drop {
-    animation: none;
-    opacity: 0.8;
-    top: 10px;
-  }
-
-  .delivery-truck.driving {
-    animation: none;
-  }
-}
 /* Water delivery progress bar */
 
 .progress-container {
@@ -555,12 +412,71 @@ canvas {
   opacity: 1;
 }
 
+.map-house.selected {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px #fbbf24;
+}
+
 .map-truck {
   position: absolute;
-  z-index: 1;
-  left: 1%;
-  top: 39%;
+  z-index: 3;
+  left: 50%;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  gap: 2px;
   font-size: clamp(25px, 5vw, 40px);
+  line-height: 1;
+  transform: translate(-50%, -50%) rotate(var(--truck-angle, 0deg));
+  transition: left 0.12s linear, top 0.12s linear,
+    transform 0.2s ease-in-out;
+  white-space: nowrap;
+}
+
+.map-tank {
+  position: relative;
+  width: 0.8em;
+  height: 0.8em;
+  overflow: hidden;
+  border: 2px solid #075985;
+  border-radius: 3px;
+  background: #dff7ff;
+  box-shadow: inset 0 0 0 1px #fff;
+}
+
+.tank-water {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(180deg, #38bdf8, #087fce);
+  transition: height 0.25s linear;
+}
+
+.map-truck.delivering {
+  filter: drop-shadow(0 2px 2px #28543a66);
+}
+
+.map-house .delivery-drop {
+  position: absolute;
+  top: -10px;
+  font-size: 0.7em;
+  animation: controlled-delivery 0.8s ease-out;
+}
+
+@keyframes controlled-delivery {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  35% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
 }
 
 #mapMessage {
@@ -568,6 +484,68 @@ canvas {
   margin: 14px 0 0;
   text-align: center;
   font-weight: bold;
+}
+
+.control-pad {
+  display: grid;
+  grid-template-areas:
+    ". up ."
+    "left down right";
+  grid-template-columns: repeat(3, minmax(64px, 1fr));
+  gap: 10px;
+  width: min(100%, 280px);
+  margin: 18px auto 4px;
+}
+
+.control-pad button {
+  display: flex;
+  min-height: 64px;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  flex-direction: column;
+  border: 2px solid #087fce;
+  border-radius: 14px;
+  background: #fff;
+  color: #075985;
+  font-size: 30px;
+  font-weight: bold;
+  line-height: 1;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: none;
+}
+
+.control-pad button span {
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+#moveUp {
+  grid-area: up;
+}
+
+#moveDown {
+  grid-area: down;
+}
+
+#moveLeft {
+  grid-area: left;
+}
+
+#moveRight {
+  grid-area: right;
+}
+
+.control-pad button:active {
+  background: #dff7ff;
+  transform: scale(0.96);
+}
+
+.control-pad button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
 }
 
 @media (max-width: 480px) {
@@ -584,4 +562,15 @@ canvas {
   .map-truck {
     font-size: 25px;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-truck {
+    transition: none;
+  }
+
+  .delivery-drop {
+    animation: none;
+  }
+
 }

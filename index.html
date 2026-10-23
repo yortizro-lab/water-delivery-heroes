@@ -24,31 +24,20 @@
     </section>
 
     <section id="game">
-      <div class="delivery-scene" aria-label="Water delivery animation">
-  <div class="water-drops" aria-hidden="true">
-    <span class="water-drop drop-one">💧</span>
-    <span class="water-drop drop-two">💧</span>
-    <span class="water-drop drop-three">💧</span>
-    <span class="water-drop drop-four">💧</span>
-    <span class="water-drop drop-five">💧</span>
-  </div>
-
-  <div class="road">
-    <div id="deliveryTruck" class="delivery-truck"
-         role="img" aria-label="Water delivery truck">
-      🚚
-    </div>
-  </div>
-
-  <p id="truckMessage" class="truck-message" aria-live="polite">
-    Your water hero is ready to deliver!
-  </p>
-</div>
-
-      <h2>💧 Water Supply</h2>
-      <p>Water remaining: <span id="water">10</span></p>
-      <p>Score: <span id="score">0</span></p>
-      <p>Families helped: <span id="families">0</span></p>
+      <h2>Your Mission</h2>
+      <div class="game-stats">
+        <p>Water Supplies: <span id="water">10</span></p>
+        <p>Score: <span id="score">0</span></p>
+        <p>Time: <span id="timer" role="timer" aria-live="polite">1:30</span></p>
+        <p>Families Helped: <span id="families">0</span></p>
+      </div>
+      <label class="mode-control" for="drivingMode">
+        Driving Mode:
+        <select id="drivingMode">
+          <option value="safe">Safe Driving</option>
+          <option value="challenge">Challenge Mode</option>
+        </select>
+      </label>
       <div id="neighborhoodMap" class="neighborhood-map">
         <div class="map-heading">
           <span>🏘️ Neighborhood Map</span>
@@ -56,55 +45,64 @@
         </div>
         <div class="map-scene">
           <svg class="road-map" viewBox="0 0 100 100" aria-hidden="true">
-            <path d="M0 50h100M50 0v100" stroke="#d6d3d1" stroke-width="12" />
+            <path d="M8 18H92M8 40H92M8 64H92M8 82H92M8 18V82M37 18V82M50 18V82M70 18V82"
+              stroke="#d6d3d1" stroke-width="7" />
           </svg>
-          <div class="map-truck" aria-hidden="true">🚚</div>
+          <div class="map-truck" role="img" aria-label="Delivery truck with sealed water tank">
+            <span aria-hidden="true">🚚</span>
+            <span class="map-tank" aria-hidden="true"><span class="tank-water"></span></span>
+          </div>
           <button class="map-house" data-house="0"
-            style="left:8%;top:18%" aria-label="Deliver water to house 1">
+            style="left:8%;top:18%" aria-label="Select house 1 for delivery">
             🏠<span>House 1</span>
           </button>
           <button class="map-house" data-house="1"
-            style="left:37%;top:18%" aria-label="Deliver water to house 2">
+            style="left:37%;top:18%" aria-label="Select house 2 for delivery">
             🏠<span>House 2</span>
           </button>
           <button class="map-house" data-house="2"
-            style="left:70%;top:18%" aria-label="Deliver water to house 3">
+            style="left:70%;top:18%" aria-label="Select house 3 for delivery">
             🏠<span>House 3</span>
           </button>
           <button class="map-house" data-house="3"
-            style="left:70%;top:40%" aria-label="Deliver water to house 4">
+            style="left:70%;top:40%" aria-label="Select house 4 for delivery">
             🏠<span>House 4</span>
           </button>
           <button class="map-house" data-house="4"
-            style="left:37%;top:40%" aria-label="Deliver water to house 5">
+            style="left:37%;top:40%" aria-label="Select house 5 for delivery">
             🏠<span>House 5</span>
           </button>
           <button class="map-house" data-house="5"
-            style="left:8%;top:40%" aria-label="Deliver water to house 6">
+            style="left:8%;top:40%" aria-label="Select house 6 for delivery">
             🏠<span>House 6</span>
           </button>
           <button class="map-house" data-house="6"
-            style="left:8%;top:64%" aria-label="Deliver water to house 7">
+            style="left:8%;top:64%" aria-label="Select house 7 for delivery">
             🏠<span>House 7</span>
           </button>
           <button class="map-house" data-house="7"
-            style="left:37%;top:64%" aria-label="Deliver water to house 8">
+            style="left:37%;top:64%" aria-label="Select house 8 for delivery">
             🏠<span>House 8</span>
           </button>
           <button class="map-house" data-house="8"
-            style="left:70%;top:64%" aria-label="Deliver water to house 9">
+            style="left:70%;top:64%" aria-label="Select house 9 for delivery">
             🏠<span>House 9</span>
           </button>
           <button class="map-house" data-house="9"
-            style="left:37%;top:82%" aria-label="Deliver water to house 10">
+            style="left:37%;top:82%" aria-label="Select house 10 for delivery">
             🏠<span>House 10</span>
           </button>
         </div>
         <p id="mapMessage" aria-live="polite">
-          Tap a house to deliver water!
+          Select House 1 to begin delivering water.
         </p>
       </div>
-      <button id="deliverButton" type="button">Deliver Water</button>
+      <div class="control-pad" aria-label="Truck controls">
+        <button id="moveUp" type="button" aria-label="Move truck up">↑<span>Up</span></button>
+        <button id="moveLeft" type="button" aria-label="Move truck left">←<span>Left</span></button>
+        <button id="moveDown" type="button" aria-label="Move truck down">↓<span>Down</span></button>
+        <button id="moveRight" type="button" aria-label="Move truck right">→<span>Right</span></button>
+      </div>
       <button id="playAgainButton" type="button" hidden>Play Again</button>
       <p id="message" aria-live="polite">Ready to make a difference?</p>
     </section>
@@ -133,9 +131,10 @@
     <section id="instructions">
       <h2>📋 How to Play</h2>
       <ul>
-        <li>Click the button to deliver one unit of water.</li>
+        <li>Tap an unserved house, then drive there with the arrows or keyboard arrow keys.</li>
+        <li>Challenge Mode spills water after 6 seconds on the way to a house.</li>
         <li>Help one family with every delivery.</li>
-        <li>Deliver all the water to complete your mission.</li>
+        <li>Deliver all the water before the 90-second timer runs out.</li>
       </ul>
     </section>
   </main>
