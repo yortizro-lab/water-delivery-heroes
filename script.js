@@ -17,6 +17,7 @@ const deliveryTruck = document.getElementById("deliveryTruck");
 const truckMessage = document.getElementById("truckMessage");
 const playAgainButton = document.getElementById("playAgainButton");
 const deliveryMessage = document.getElementById("deliveryMessage");
+const neighborhoodMap = document.getElementById("neighborhoodMap");
 
 function updateDisplay() {
   waterDisplay.textContent = water;
@@ -33,15 +34,6 @@ function updateDisplay() {
 
 deliverButton.addEventListener("click", function () {
   if (water <= 0) return;
-  if (water === 0) {
-  deliveryMessage.textContent =
-    "🎉 Mission Complete! You helped 10 families get water! 💧";
-  deliveryMessage.classList.add("success");
-} else {
-  deliveryMessage.textContent =
-    "🚚 Great delivery! Every drop helps a family. 💙";
-  deliveryMessage.classList.remove("success");
-}
   // Animate the delivery truck
   deliveryTruck.classList.remove("driving");
 
@@ -56,13 +48,15 @@ deliverButton.addEventListener("click", function () {
   score += 10;
   families++;
 
-  deliveryMessage.textContent =
-  "Keep going! Every drop helps a family. 💧";
-deliveryMessage.classList.remove("success");
+  deliveryMessage.textContent = "Keep going! Every drop helps a family. 💧";
+  deliveryMessage.classList.remove("success");
 
   updateDisplay();
 
   if (water === 0) {
+    deliveryMessage.textContent =
+      "🎉 Mission Complete! You helped 10 families get water! 💧";
+    deliveryMessage.classList.add("success");
     messageDisplay.textContent =
       "All water delivered! You are a hero! 🏆";
 
@@ -81,9 +75,96 @@ playAgainButton.addEventListener("click", function () {
   families = 0;
 
   updateDisplay();
+  if (neighborhoodMap) {
+    resetMap();
+  }
 
   messageDisplay.textContent = "Ready to make a difference? 💧";
   deliverButton.textContent = "Deliver Water";
   deliverButton.disabled = false;
   playAgainButton.hidden = true;
 });
+
+if (neighborhoodMap) {
+  const houses = neighborhoodMap.querySelectorAll(".map-house");
+  const mapDeliveries = document.getElementById("mapDeliveries");
+  const mapMessage = document.getElementById("mapMessage");
+  const mapTruck = neighborhoodMap.querySelector(".map-truck");
+
+  function refreshMap() {
+    const served = neighborhoodMap.querySelectorAll(
+      ".map-house.served"
+    ).length;
+
+    mapDeliveries.textContent = `${served} of 10 houses served`;
+
+    if (served === 10) {
+      mapMessage.textContent =
+        "🎉 Mission complete! You delivered water to all 10 houses!";
+    }
+  }
+
+  function resetMap() {
+    houses.forEach((house, index) => {
+      house.disabled = false;
+      house.classList.remove("served");
+      house.innerHTML = `🏠<span>House ${index + 1}</span>`;
+      house.setAttribute(
+        "aria-label",
+        `Deliver water to house ${index + 1}`
+      );
+    });
+
+    mapDeliveries.textContent = "0 of 10 houses served";
+    mapMessage.textContent = "Tap a house to deliver water!";
+    mapTruck.style.left = "1%";
+    mapTruck.style.top = "39%";
+  }
+
+  houses.forEach((house) => {
+    house.addEventListener("click", () => {
+      if (house.disabled) {
+        return;
+      }
+
+      if (water <= 0) {
+        mapMessage.textContent =
+          "💧 No water left! Start a new mission to play again.";
+        return;
+      }
+
+      water -= 1;
+      score += 10;
+      families += 1;
+
+      house.classList.add("served");
+      house.textContent = "✅";
+      house.disabled = true;
+      house.setAttribute("aria-label", "House served");
+
+      updateDisplay();
+      refreshMap();
+
+      if (water > 0 && families < 10) {
+        mapMessage.textContent =
+          "🚚 Delivery successful! Choose another house.";
+      }
+
+      const rect = house.getBoundingClientRect();
+      const sceneRect = neighborhoodMap
+        .querySelector(".map-scene")
+        .getBoundingClientRect();
+
+      mapTruck.style.left =
+        Math.max(0, Math.min(82,
+          ((rect.left - sceneRect.left) / sceneRect.width) * 100
+        )) + "%";
+      mapTruck.style.top =
+        Math.max(0, Math.min(86,
+          ((rect.top - sceneRect.top) / sceneRect.height) * 100
+        )) + "%";
+    });
+  });
+
+  refreshMap();
+}

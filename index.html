@@ -49,6 +49,61 @@
       <p>Water remaining: <span id="water">10</span></p>
       <p>Score: <span id="score">0</span></p>
       <p>Families helped: <span id="families">0</span></p>
+      <div id="neighborhoodMap" class="neighborhood-map">
+        <div class="map-heading">
+          <span>🏘️ Neighborhood Map</span>
+          <span id="mapDeliveries">0 of 10 houses served</span>
+        </div>
+        <div class="map-scene">
+          <svg class="road-map" viewBox="0 0 100 100" aria-hidden="true">
+            <path d="M0 50h100M50 0v100" stroke="#d6d3d1" stroke-width="12" />
+          </svg>
+          <div class="map-truck" aria-hidden="true">🚚</div>
+          <button class="map-house" data-house="0"
+            style="left:8%;top:18%" aria-label="Deliver water to house 1">
+            🏠<span>House 1</span>
+          </button>
+          <button class="map-house" data-house="1"
+            style="left:37%;top:18%" aria-label="Deliver water to house 2">
+            🏠<span>House 2</span>
+          </button>
+          <button class="map-house" data-house="2"
+            style="left:70%;top:18%" aria-label="Deliver water to house 3">
+            🏠<span>House 3</span>
+          </button>
+          <button class="map-house" data-house="3"
+            style="left:70%;top:40%" aria-label="Deliver water to house 4">
+            🏠<span>House 4</span>
+          </button>
+          <button class="map-house" data-house="4"
+            style="left:37%;top:40%" aria-label="Deliver water to house 5">
+            🏠<span>House 5</span>
+          </button>
+          <button class="map-house" data-house="5"
+            style="left:8%;top:40%" aria-label="Deliver water to house 6">
+            🏠<span>House 6</span>
+          </button>
+          <button class="map-house" data-house="6"
+            style="left:8%;top:64%" aria-label="Deliver water to house 7">
+            🏠<span>House 7</span>
+          </button>
+          <button class="map-house" data-house="7"
+            style="left:37%;top:64%" aria-label="Deliver water to house 8">
+            🏠<span>House 8</span>
+          </button>
+          <button class="map-house" data-house="8"
+            style="left:70%;top:64%" aria-label="Deliver water to house 9">
+            🏠<span>House 9</span>
+          </button>
+          <button class="map-house" data-house="9"
+            style="left:37%;top:82%" aria-label="Deliver water to house 10">
+            🏠<span>House 10</span>
+          </button>
+        </div>
+        <p id="mapMessage" aria-live="polite">
+          Tap a house to deliver water!
+        </p>
+      </div>
       <button id="deliverButton" type="button">Deliver Water</button>
       <button id="playAgainButton" type="button" hidden>Play Again</button>
       <p id="message" aria-live="polite">Ready to make a difference?</p>

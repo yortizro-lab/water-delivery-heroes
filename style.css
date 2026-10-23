@@ -483,3 +483,105 @@ canvas {
   color: #166534;
   transform: scale(1.03);
 }
+
+.neighborhood-map {
+  max-width: 700px;
+  margin: 24px auto;
+  padding: 16px;
+  border-radius: 18px;
+  background: #e0f7ff;
+  color: #075985;
+}
+
+.map-heading {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.map-scene {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #a8df91;
+  border: 3px solid #7cbf69;
+}
+
+.road-map {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.map-house {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 18%;
+  min-height: 53px;
+  padding: 3px;
+  transform: translate(-10%, -10%);
+  border: 2px solid #fff;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 3px 7px #28543a40;
+  font-size: clamp(19px, 4vw, 32px);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.map-house span {
+  font-size: clamp(9px, 1.8vw, 12px);
+  font-weight: bold;
+  color: #075985;
+}
+
+.map-house.served {
+  background: #dcfce7;
+  border-color: #16a34a;
+}
+
+.map-house:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.map-truck {
+  position: absolute;
+  z-index: 1;
+  left: 1%;
+  top: 39%;
+  font-size: clamp(25px, 5vw, 40px);
+}
+
+#mapMessage {
+  min-height: 24px;
+  margin: 14px 0 0;
+  text-align: center;
+  font-weight: bold;
+}
+
+@media (max-width: 480px) {
+  .neighborhood-map {
+    padding: 9px;
+  }
+
+  .map-house {
+    width: 21%;
+    min-height: 43px;
+    border-radius: 8px;
+  }
+
+  .map-truck {
+    font-size: 25px;
+  }
+}
