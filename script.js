@@ -231,7 +231,8 @@ async function deliverAtHouse(house) {
 
   house.classList.add("served");
   house.classList.remove("selected");
-  house.innerHTML = '✅<span class="delivery-drop" aria-hidden="true">💧</span>';
+  house.innerHTML =
+    '✅<span class="delivery-drop" aria-hidden="true">💧</span>';
   house.disabled = true;
 
   water = Math.max(0, water - 1);
@@ -242,7 +243,8 @@ async function deliverAtHouse(house) {
   refreshMap();
 
   mapMessage.textContent = "💧 Water delivered! +10 points.";
-  deliveryMessage.textContent = "Keep going! Every drop helps a family. 💧";
+  deliveryMessage.textContent =
+    "Keep going! Every drop helps a family. 💧";
   deliveryMessage.classList.remove("success");
 
   mapTruck.classList.add("delivering");
