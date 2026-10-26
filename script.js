@@ -391,7 +391,7 @@ messageDisplay.textContent = "Ready to make a difference? 💧";
 deliveryMessage.textContent =
   "Keep going! Every drop helps a family. 💧";
 deliveryMessage.classList.remove("success");
-}
+
 
     drivingMode.value = "safe";
     resetMap();
