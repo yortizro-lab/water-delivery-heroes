@@ -409,4 +409,3 @@ deliveryMessage.classList.remove("success");
 
   updateDisplay();
   startTimer();
-});
