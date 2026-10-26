@@ -15,7 +15,7 @@ let timerInterval = null;
 let spillInterval = null;
 let tripStartedAt = null;
 let spillPenaltyApplied = false;
-let gameStarted = false;
+let gameStarted = true;
 let gameEnded = false;
 let deliveryInProgress = false;
 
