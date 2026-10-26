@@ -417,7 +417,6 @@ playAgainButton.addEventListener("click", () => {
 
   mapMessage.textContent =
     "Game started! 🚚 Use the arrow buttons to deliver water.";
-);
 
 resetMap();
 updateDisplay();
