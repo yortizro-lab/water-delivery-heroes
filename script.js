@@ -410,13 +410,22 @@ playAgainButton.addEventListener("click", () => {
     deliveryMessage.classList.remove("success");
   }
 
+ startButton.addEventListener("click", () => {
+  if (gameStarted && !gameEnded) {
+    return;
+  }
+
+  resetMap();
+
+  gameEnded = false;
   gameStarted = true;
+
   startButton.textContent = "▶ GAME IN PROGRESS";
   startButton.disabled = true;
-  startTimer();
 
   mapMessage.textContent =
-    "Game started! 🚚 Use the arrow buttons to deliver water.";
+    "Game started! 🏁 Use the arrow buttons to deliver water.";
 
-resetMap();
-updateDisplay();
+  updateDisplay();
+  startTimer();
+});
