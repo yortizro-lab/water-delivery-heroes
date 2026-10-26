@@ -189,8 +189,13 @@ function setTruckFacing(direction) {
 }
 
 function refreshMap() {
-  const served = neighborhoodMap.querySelectorAll(".map-house.served").length;
-  mapDeliveries.textContent = `${served} of 10 houses served`;
+  const served = neighborhoodMap
+    ? neighborhoodMap.querySelectorAll(".map-house.served").length
+    : 0;
+
+  if (mapDeliveries) {
+    mapDeliveries.textContent = `${served} houses served`;
+  }
 }
 
 function resetMap() {
@@ -205,10 +210,10 @@ function resetMap() {
     house.innerHTML = `🏠<span>House ${index + 1}</span>`;
     house.setAttribute("aria-label", `Select house ${index + 1} for delivery`);
   });
-  if (mapDeliveries) {
-  mapDeliveries.textContent = "0 of 10 houses served";
+ \if (mapMessage) {
+  mapMessage.textContent = "Use the arrow buttons to drive the truck! 🚚";
 }
-  mapMessage.textContent = "You can do it";
+}
   mapTruck.style.left = `${truckPosition.left}%`;
   mapTruck.style.top = `${truckPosition.top}%`;
   mapTruck.classList.remove("delivering");
