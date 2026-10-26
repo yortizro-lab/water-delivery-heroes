@@ -206,7 +206,7 @@ function resetMap() {
     house.setAttribute("aria-label", `Select house ${index + 1} for delivery`);
   });
   mapDeliveries.textContent = "0 of 10 houses served";
-  mapMessage.textContent = "Select House 1 to begin delivering water.";
+  mapMessage.textContent = "Use the arrow buttons to drive the truck! 🚚";
   mapTruck.style.left = `${truckPosition.left}%`;
   mapTruck.style.top = `${truckPosition.top}%`;
   mapTruck.classList.remove("delivering");
