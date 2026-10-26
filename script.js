@@ -380,23 +380,6 @@ drivingMode.addEventListener("change", () => {
   }
 });
 
-playAgainButton.addEventListener("click", () => {
-  stopTimer();
-  stopSpillTimer();
-  water = totalWater;
-  score = 0;
-  families = 0;
-  timeRemaining = startingTime;
-  gameStarted = false;
-  gameEnded = false;
-  drivingMode.value = "safe";
-  resetMap();
-  updateDisplay();
-  messageDisplay.textContent = "Ready to make a difference? 💧";
-  deliveryMessage.textContent = "Keep going! Every drop helps a family. 💧";
-  deliveryMessage.classList.remove("success");
-  playAgainButton.hidden = true;
-});
 gameEnded = false;
 deliveryInProgress = false;
 
@@ -410,9 +393,6 @@ deliveryMessage.textContent =
 deliveryMessage.classList.remove("success");
 }
 
- gameEnded = false;
-    deliveryInProgress = false;
-
     drivingMode.value = "safe";
     resetMap();
     updateDisplay();
@@ -421,16 +401,16 @@ deliveryMessage.classList.remove("success");
     deliveryMessage.textContent =
       "Keep going! Every drop helps a family. 💧";
     deliveryMessage.classList.remove("success");
-  }
+}
 
- startButton.addEventListener("click", () => {
+startButton.addEventListener("click", () => {
   if (gameStarted && !gameEnded) {
     return;
   }
 
   resetMap();
-
   gameEnded = false;
+  deliveryInProgress = false;
   gameStarted = true;
 
   startButton.textContent = "▶ GAME IN PROGRESS";
