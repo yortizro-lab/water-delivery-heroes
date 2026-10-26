@@ -168,6 +168,7 @@ const mapTruck = neighborhoodMap?.querySelector(".map-truck");
 const roadColumns = [8, 37, 50, 70, 92];
 const roadRows = [18, 40, 64, 82];
 let truckPosition = { left: 50, top: 40 };
+let selectedHouse = null;
 let facingDirection = "right";
 houses.forEach((house) => {
   house.addEventListener("click", () => {
@@ -210,18 +211,13 @@ function resetMap() {
 }
 
 async function deliverAtHouse(house) {
-  const reachedHouse = [...houses].find((house) => {
-  return (
-    !house.classList.contains("served") &&
-    truckPosition.left === parseFloat(house.style.left) &&
-    truckPosition.top === parseFloat(house.style.top)
-  );
-});
-
-if (reachedHouse) {
-  selectedHouse = reachedHouse;
-  await deliverAtHouse(reachedHouse);
-}
+  if (
+    gameEnded ||
+    deliveryInProgress ||
+    house.classList.contains("served") ||
+    truckPosition.left !== parseFloat(house.style.left) ||
+    truckPosition.top !== parseFloat(house.style.top)
+  ) {
     return;
   }
 
@@ -232,6 +228,7 @@ if (reachedHouse) {
 
   deliveryInProgress = true;
   stopSpillTimer();
+
   house.classList.add("served");
   house.classList.remove("selected");
   house.innerHTML = '✅<span class="delivery-drop" aria-hidden="true">💧</span>';
@@ -240,11 +237,14 @@ if (reachedHouse) {
   water = Math.max(0, water - 1);
   score += 10;
   families += 1;
+
   updateDisplay();
   refreshMap();
-  mapMessage.textContent = "💧 Water delivered! +10 points. Select another house.";
+
+  mapMessage.textContent = "💧 Water delivered! +10 points.";
   deliveryMessage.textContent = "Keep going! Every drop helps a family. 💧";
   deliveryMessage.classList.remove("success");
+
   mapTruck.classList.add("delivering");
   await wait(deliveryAnimationDuration);
   mapTruck.classList.remove("delivering");
@@ -336,7 +336,7 @@ Object.entries(moveButtons).forEach(([direction, button]) => {
     return;
   }
 
-  button.addEventListener("click", () => {s
+  button.addEventListener("click", () => {
     console.log(`Arrow clicked: ${direction}`);
     moveTruck(direction);
   });
