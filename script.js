@@ -373,10 +373,14 @@ document.addEventListener("keydown", (event) => {
 });
 
 
-gameEnded = false;
-deliveryInProgress = false;
+const startButton = document.getElementById("startButton");
 
+// Prepare the game when the page opens.
+gameEnded = false;
+gameStarted = false;
+deliveryInProgress = false;
 drivingMode.value = "safe";
+
 resetMap();
 updateDisplay();
 
@@ -385,27 +389,41 @@ deliveryMessage.textContent =
   "Keep going! Every drop helps a family. 💧";
 deliveryMessage.classList.remove("success");
 
+startButton.disabled = false;
+startButton.textContent = "▶ START GAME";
 
-    drivingMode.value = "safe";
-    resetMap();
-    updateDisplay();
+// Start or restart the game when the button is clicked.
+startButton.addEventListener("click", () => {
+  if (gameStarted && !gameEnded) {
+    return;
+  }
 
-    messageDisplay.textContent = "Ready to make a difference? 💧";
-    deliveryMessage.textContent =
-      "Keep going! Every drop helps a family. 💧";
-    deliveryMessage.classList.remove("success");
+  stopTimer();
+  stopSpillTimer();
 
+  water = totalWater;
+  score = 0;
+  families = 0;
+  timeRemaining = startingTime;
+
+  gameEnded = false;
+  gameStarted = true;
+  deliveryInProgress = false;
+  drivingMode.value = "safe";
 
   resetMap();
-  gameEnded = false;
-  deliveryInProgress = false;
-  gameStarted = true;
+  updateDisplay();
 
   startButton.textContent = "▶ GAME IN PROGRESS";
   startButton.disabled = true;
 
-  mapMessage.textContent =
-    "Game started! 🏁 Use the arrow buttons to deliver water.";
+  messageDisplay.textContent = "Game started! 🚚";
+  deliveryMessage.textContent =
+    "Deliver water to the families! 💧";
+  deliveryMessage.classList.remove("success");
 
-  updateDisplay();
+  mapMessage.textContent =
+    "Game started! Use the arrow buttons to drive to each house.";
+
   startTimer();
+});
