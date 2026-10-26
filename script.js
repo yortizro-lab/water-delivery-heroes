@@ -385,3 +385,17 @@ playAgainButton.addEventListener("click", () => {
 
 resetMap();
 updateDisplay();
+
+const startButton = document.getElementById("startButton");
+
+startButton?.addEventListener("click", () => {
+  if (gameEnded) {
+    return;
+  }
+
+  gameStarted = true;
+  startButton.disabled = true;
+  startTimer();
+
+  mapMessage.textContent = "Game started! 🚚 Use the arrow buttons to deliver water.";
+});
