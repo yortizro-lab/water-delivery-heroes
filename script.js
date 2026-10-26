@@ -305,11 +305,18 @@ async function moveTruck(direction) {
   }
   if (drivingMode.value === "challenge" && tripStartedAt === null) {
     startSpillTimer();
+ 
   }
-  if (selectedHouse && truckPosition.left === parseFloat(selectedHouse.style.left) &&
-      truckPosition.top === parseFloat(selectedHouse.style.top)) {
-    await deliverAtHouse(selectedHouse);
-  }
+    const reachedHouse = [...houses].find((house) => {
+  return (
+    !house.classList.contains("served") &&
+    truckPosition.left === parseFloat(house.style.left) &&
+    truckPosition.top === parseFloat(house.style.top)
+  );
+});
+
+if (reachedHouse) {
+  await deliverAtHouse(reachedHouse);
 }
 
 houses.forEach((house) => {
