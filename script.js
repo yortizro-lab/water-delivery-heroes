@@ -1,7 +1,7 @@
 /* Water Delivery Heroes - Game Logic */
 
 const totalWater = 10;
-const startingTime = 90;
+const startingTime = 45;
 const deliveryAnimationDuration = 800;
 const spillTimeLimit = 6000;
 const spillRate = 0.5;
@@ -210,8 +210,15 @@ function resetMap() {
     house.innerHTML = `🏠<span>House ${index + 1}</span>`;
     house.setAttribute("aria-label", `Select house ${index + 1} for delivery`);
   });
- \if (mapMessage) {
-  mapMessage.textContent = "Use the arrow buttons to drive the truck! 🚚";
+ if (mapMessage) {
+  mapMessage.textContent =
+    "Use the arrow buttons to drive the truck! 🚚";
+}
+
+if (mapTruck) {
+  mapTruck.style.left = `${truckPosition.left}%`;
+  mapTruck.style.top = `${truckPosition.top}%`;
+  mapTruck.classList.remove("delivering");
 }
 }
   mapTruck.style.left = `${truckPosition.left}%`;
@@ -417,12 +424,10 @@ startButton.addEventListener("click", () => {
   gameStarted = true;
   deliveryInProgress = false;
   drivingMode.value = "safe";
-
   resetMap();
-  updateDisplay();
 
-  startButton.textContent = "▶ GAME IN PROGRESS";
-  startButton.disabled = true;
+ startButton.disabled = false;
+startButton.textContent = "▶ START GAME"; updateDisplay();
 
   messageDisplay.textContent = "Game started! 🚚";
   deliveryMessage.textContent =
