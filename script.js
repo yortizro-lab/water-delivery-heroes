@@ -383,9 +383,6 @@ playAgainButton.addEventListener("click", () => {
   playAgainButton.hidden = true;
 });
 
-resetMap();
-updateDisplay();
-
 const startButton = document.getElementById("startButton");
 
 startButton?.addEventListener("click", () => {
@@ -399,3 +396,6 @@ startButton?.addEventListener("click", () => {
 
   mapMessage.textContent = "Game started! 🚚 Use the arrow buttons to deliver water.";
 });
+
+resetMap();
+updateDisplay();
