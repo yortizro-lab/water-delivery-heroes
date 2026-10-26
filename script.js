@@ -372,13 +372,6 @@ document.addEventListener("keydown", (event) => {
   moveTruck(direction);
 });
 
-drivingMode.addEventListener("change", () => {
-  if (drivingMode.value === "safe") {
-    stopSpillTimer();
-  } else if (selectedHouse && gameStarted && !gameEnded) {
-    startSpillTimer();
-  }
-});
 
 gameEnded = false;
 deliveryInProgress = false;
@@ -401,12 +394,7 @@ deliveryMessage.classList.remove("success");
     deliveryMessage.textContent =
       "Keep going! Every drop helps a family. 💧";
     deliveryMessage.classList.remove("success");
-}
 
-startButton.addEventListener("click", () => {
-  if (gameStarted && !gameEnded) {
-    return;
-  }
 
   resetMap();
   gameEnded = false;
