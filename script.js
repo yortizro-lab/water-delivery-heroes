@@ -167,7 +167,7 @@ const mapDeliveries = document.getElementById("mapDeliveries");
 const mapTruck = neighborhoodMap?.querySelector(".map-truck");
 const roadColumns = [8, 37, 50, 70, 92];
 const roadRows = [18, 40, 64, 82];
-let truckPosition = { left: -1, top: 40 };
+let truckPosition = { left: 50, top: 40 };
 let facingDirection = "right";
 houses.forEach((house) => {
   house.addEventListener("click", () => {
@@ -331,7 +331,15 @@ houses.forEach((house) => {
 });
 
 Object.entries(moveButtons).forEach(([direction, button]) => {
-  button.addEventListener("click", () => moveTruck(direction));
+  if (!button) {
+    console.error(`Missing movement button: ${direction}`);
+    return;
+  }
+
+  button.addEventListener("click", () => {s
+    console.log(`Arrow clicked: ${direction}`);
+    moveTruck(direction);
+  });
 });
 
 document.addEventListener("keydown", (event) => {
