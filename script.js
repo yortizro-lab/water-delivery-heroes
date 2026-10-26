@@ -210,6 +210,7 @@ function resetMap() {
     house.innerHTML = `🏠<span>House ${index + 1}</span>`;
     house.setAttribute("aria-label", `Select house ${index + 1} for delivery`);
   });
+  
  if (mapMessage) {
   mapMessage.textContent =
     "Use the arrow buttons to drive the truck! 🚚";
