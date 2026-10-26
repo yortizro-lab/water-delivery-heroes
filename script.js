@@ -323,6 +323,7 @@ async function moveTruck(direction) {
 if (reachedHouse) {
   await deliverAtHouse(reachedHouse);
 }
+}
 
 houses.forEach((house) => {
   house.addEventListener("click", () => {
@@ -396,6 +397,18 @@ playAgainButton.addEventListener("click", () => {
   deliveryMessage.classList.remove("success");
   playAgainButton.hidden = true;
 });
+gameEnded = false;
+deliveryInProgress = false;
+
+drivingMode.value = "safe";
+resetMap();
+updateDisplay();
+
+messageDisplay.textContent = "Ready to make a difference? 💧";
+deliveryMessage.textContent =
+  "Keep going! Every drop helps a family. 💧";
+deliveryMessage.classList.remove("success");
+}
 
  gameEnded = false;
     deliveryInProgress = false;
