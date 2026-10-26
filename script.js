@@ -133,6 +133,11 @@ function endGame(completed, text) {
   stopTimer();
   stopSpillTimer();
   gameEnded = true;
+  const startButton = document.getElementById("startButton");
+if (startButton) {
+  startButton.textContent = completed ? "🎉 PLAY AGAIN" : "🔄 TRY AGAIN";
+  startButton.disabled = false;
+}
   playAgainButton.hidden = false;
   houses.forEach((house) => {
     house.disabled = true;
@@ -392,7 +397,27 @@ playAgainButton.addEventListener("click", () => {
   playAgainButton.hidden = true;
 });
 
-const startButton = document.getElementById("startButton");
+ gameEnded = false;
+    deliveryInProgress = false;
+
+    drivingMode.value = "safe";
+    resetMap();
+    updateDisplay();
+
+    messageDisplay.textContent = "Ready to make a difference? 💧";
+    deliveryMessage.textContent =
+      "Keep going! Every drop helps a family. 💧";
+    deliveryMessage.classList.remove("success");
+  }
+
+  gameStarted = true;
+  startButton.textContent = "▶ GAME IN PROGRESS";
+  startButton.disabled = true;
+  startTimer();
+
+  mapMessage.textContent =
+    "Game started! 🚚 Use the arrow buttons to deliver water.";
+});
 
 startButton?.addEventListener("click", () => {
   if (gameEnded) {
