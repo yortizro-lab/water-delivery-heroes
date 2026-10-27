@@ -200,10 +200,12 @@ function refreshMap() {
 
 function resetMap() {
   stopSpillTimer();
+
   truckPosition = { left: 50, top: 40 };
   setTruckFacing("right");
   selectedHouse = null;
   deliveryInProgress = false;
+
   houses.forEach((house, index) => {
     house.disabled = false;
     house.classList.remove("served", "selected");
@@ -222,9 +224,6 @@ if (mapTruck) {
   mapTruck.classList.remove("delivering");
 }
 }
-  mapTruck.style.left = `${truckPosition.left}%`;
-  mapTruck.style.top = `${truckPosition.top}%`;
-  mapTruck.classList.remove("delivering");
   Object.values(moveButtons).forEach((button) => {
     button.disabled = false;
   });
