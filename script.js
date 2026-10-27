@@ -392,9 +392,22 @@ const startButton = document.getElementById("startButton");
 gameEnded = false;
 gameStarted = false;
 deliveryInProgress = false;
-drivingMode.value = "safe";
 
 resetMap();
+
+// Re-enable the truck controls for the new game.
+Object.values(moveButtons).forEach((button) => {
+  if (button) {
+    button.disabled = false;
+  }
+});
+
+houses.forEach((house) => {
+  house.disabled = false;
+});
+
+selectedHouse = null;
+
 updateDisplay();
 
 messageDisplay.textContent = "Ready to make a difference? 💧";
