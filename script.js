@@ -228,7 +228,6 @@ if (mapTruck) {
   Object.values(moveButtons).forEach((button) => {
     button.disabled = false;
   });
-}
 
 async function deliverAtHouse(house) {
   if (
