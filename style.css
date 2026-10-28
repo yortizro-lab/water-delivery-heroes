@@ -262,10 +262,6 @@ canvas {
   cursor: pointer;
 }
 
-#playAgainButton[hidden] {
-  display: none;
-}
-
 /* Water delivery progress bar */
 
 .progress-container {

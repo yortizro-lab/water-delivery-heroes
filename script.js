@@ -1,11 +1,12 @@
 /* Water Delivery Heroes - Game Logic */
 
 const totalWater = 10;
-const startingTime = 45;
+const startingTime = 35;
 const deliveryAnimationDuration = 800;
 const spillTimeLimit = 6000;
 const spillRate = 0.5;
 const spillTick = 250;
+
 
 let water = totalWater;
 let score = 0;
