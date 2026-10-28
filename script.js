@@ -329,6 +329,9 @@ async function moveTruck(direction) {
   truckPosition = nextPosition;
   mapTruck.style.left = `${truckPosition.left}%`;
   mapTruck.style.top = `${truckPosition.top}%`;
+  if (gameStarted && !gameEnded && deliveryInProgress) {
+  startSpillTimer();
+}
   mapMessage.textContent = "🚚 Driving...";
   if (!gameStarted) {
     gameStarted = true;
