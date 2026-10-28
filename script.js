@@ -327,12 +327,16 @@ async function moveTruck(direction) {
 
   setTruckFacing(direction);
   truckPosition = nextPosition;
+
   mapTruck.style.left = `${truckPosition.left}%`;
   mapTruck.style.top = `${truckPosition.top}%`;
-  if (gameStarted && !gameEnded && deliveryInProgress) {
+
+  //Start the water-spill timer while driving
+  if (gameStarted && !gameEnded) {
   startSpillTimer();
 }
   mapMessage.textContent = "🚚 Driving...";
+  
   if (!gameStarted) {
     gameStarted = true;
     startTimer();
