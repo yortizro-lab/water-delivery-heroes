@@ -259,7 +259,7 @@ async function deliverAtHouse(house) {
   const drop = document.createElement ("span");
     drop.className = "delivery-drop";
     drop.setAttribute ("aria-hidden", "true");
-    drop.textContent = "U+1f4a7"
+    drop.textContent = "💧";
     house.appendChild(drop);
     
   house.disabled = true;
