@@ -1,9 +1,5 @@
 
 
-* {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
   padding: 0;
@@ -199,10 +195,6 @@ section {
 }
 
 button {
-  max-width: 100%;
-  min-height: 48px;
-  font-size: 16px;
-  cursor: pointer;
   touch-action: manipulation;
 }
 
@@ -246,21 +238,6 @@ canvas {
   }
 }
 
-#playAgainButton {
-  display: block;
-  width: 100%;
-  max-width: 340px;
-  min-height: 50px;
-  margin: 12px auto;
-  padding: 12px;
-  border: 2px solid #087fce;
-  border-radius: 14px;
-  background: #ffffff;
-  color: #087fce;
-  font-size: 17px;
-  font-weight: bold;
-  cursor: pointer;
-}
 
 /* Water delivery progress bar */
 
