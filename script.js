@@ -6,6 +6,7 @@ const deliveryAnimationDuration = 800;
 const spillTimeLimit = 3000;
 const spillRate = 0.5;
 const spillTick = 250;
+const spillDistanceLimit = 15;
 
 
 let water = totalWater;
@@ -95,14 +96,14 @@ function stopSpillTimer() {
 }
    
 function startSpillTimer() {
-  if (spillInterval !== null || gameEnded || deliveryInProgress) {
+  if (spillInterval !== null || gameEnded || !gameStarted) {
     return;
   }
 
   tripStartedAt = Date.now();
 
   spillInterval = window.setInterval(() => {
-    if (tripStartedAt === null || gameEnded || deliveryInProgress) {
+    if (tripStartedAt === null || gameEnded || !gameStarted) {
       return;
     }
 
