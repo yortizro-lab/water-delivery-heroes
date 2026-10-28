@@ -25,6 +25,7 @@ const progressFill = document.getElementById("progressFill");
 const deliveryProgress = document.getElementById("deliveryProgress");
 const waterDisplay = document.getElementById("water");
 const scoreDisplay = document.getElementById("score");
+const startButton = document.getElementById ("startButton");
 const familiesDisplay = document.getElementById("families");
 const timerDisplay = document.getElementById("timer");
 const messageDisplay = document.getElementById("message");
@@ -423,7 +424,7 @@ startButton.disabled = false;
 startButton.textContent = "▶ START GAME";
 
 // Start or restart the game when the button is clicked.
-startButton.addEventListener("click" = "▶ START GAME, () => {
+startButton.addEventListener("click", () => {
   if (gameStarted && !gameEnded) {
     return;
   }
@@ -453,4 +454,5 @@ startButton.textContent = "▶ START GAME"; updateDisplay();
     "Game started! Use the arrow buttons to drive to each house.";
 
   startTimer();
+  updateDisplay ();
 });
