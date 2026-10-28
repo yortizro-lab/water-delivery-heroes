@@ -256,8 +256,12 @@ async function deliverAtHouse(house) {
 
   house.classList.add("served");
   house.classList.remove("selected");
-  document.createElement =
-    '✅<span class="delivery-drop" aria-hidden="true">💧</span>';
+  const drop = document.createElement ("span");
+    drop.className = "delivery-drop";
+    drop.setAttribute ("aria-hidden", "true");
+    drop.textContent = "U+1f4a7"
+    house.appendChild(drop);
+    
   house.disabled = true;
 
   water = Math.max(0, water - 1);
