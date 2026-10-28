@@ -424,6 +424,7 @@ startButton.disabled = false;
 startButton.textContent = "▶ START GAME";
 
 // Start or restart the game when the button is clicked.
+
 startButton.addEventListener("click", () => {
   if (gameStarted && !gameEnded) {
     return;
