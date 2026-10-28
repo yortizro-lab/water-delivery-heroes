@@ -114,11 +114,11 @@ function startSpillTimer() {
     if (!spillPenaltyApplied) {
       spillPenaltyApplied = true;
       score = Math.max(0, score - 5);
-
+      
       mapMessage.textContent =
         "💦 Water spilling! You lost 5 points!";
-
-      mapTruck?.classList.add("spilling");
+     
+        mapTruck?.classList.add("spilling");
     }
 
     water = Math.max(
@@ -215,7 +215,7 @@ function resetMap() {
   houses.forEach((house, index) => {
     house.disabled = false;
     house.classList.remove("served", "selected");
-    house.innerHTML = `🏠<span>House ${index + 1}</span>`;
+    house.textContent= `🏠<span>House ${index + 1}</span>`;
     house.setAttribute("aria-label", `Select house ${index + 1} for delivery`);
   });
   
@@ -255,7 +255,7 @@ async function deliverAtHouse(house) {
 
   house.classList.add("served");
   house.classList.remove("selected");
-  house.innerHTML =
+  document.createElement =
     '✅<span class="delivery-drop" aria-hidden="true">💧</span>';
   house.disabled = true;
 
@@ -327,7 +327,7 @@ async function moveTruck(direction) {
     gameStarted = true;
     startTimer();
   }
-  if 
+
     const reachedHouse = [...houses].find((house) => {
   return (
     !house.classList.contains("served") &&
@@ -346,6 +346,7 @@ houses.forEach((house) => {
     if (house.disabled || deliveryInProgress || gameEnded) {
       return;
     }
+
     const houseNumber = Number(house.dataset.house) + 1;
     const nextHouseNumber = families + 1;
     if (houseNumber !== nextHouseNumber) {
@@ -389,7 +390,7 @@ document.addEventListener("keydown", (event) => {
 });
 
 
-const startButton = document.getElementById("startButton");
+
 
 // Prepare the game when the page opens.
 gameEnded = false;
@@ -422,7 +423,7 @@ startButton.disabled = false;
 startButton.textContent = "▶ START GAME";
 
 // Start or restart the game when the button is clicked.
-startButton.addEventListener("click", () => {
+startButton.addEventListener("click" = "▶ START GAME, () => {
   if (gameStarted && !gameEnded) {
     return;
   }
