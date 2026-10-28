@@ -471,8 +471,9 @@ startButton.addEventListener("click", () => {
   deliveryInProgress = false;
   resetMap();
 
- startButton.disabled = false;
-startButton.textContent = "▶ START GAME"; updateDisplay();
+ startButton.disabled = true;
+ startButton.textContent = "🚚   GAME RUNNING";
+ updateDisplay ();
 
   messageDisplay.textContent = "Game started! 🚚";
   deliveryMessage.textContent =
