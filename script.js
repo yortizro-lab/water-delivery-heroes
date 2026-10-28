@@ -96,14 +96,13 @@ function stopSpillTimer() {
 }
    
 
+
 function startSpillTimer() {
   if (spillInterval !== null || gameEnded || !gameStarted) {
     return;
   }
 
-  if (tripStartedAt === null) {
-    tripStartedAt = Date.now();
-  }
+  tripStartedAt = Date.now();
 
   spillInterval = window.setInterval(() => {
     if (gameEnded || !gameStarted || !deliveryInProgress) {
@@ -114,12 +113,11 @@ function startSpillTimer() {
     const elapsed = Date.now() - tripStartedAt;
 
     if (elapsed >= spillTimeLimit) {
-      // Spill water and reduce points every 1.5 seconds.
       water = Math.max(0, water - 1);
       score = Math.max(0, score - 5);
 
       mapMessage.textContent =
-        "💦 Water spilling! -1 water, -5 points!";
+        "💦 Water spilled! -1 water and -5 points!";
 
       if (mapTruck) {
         mapTruck.classList.add("spilling");
@@ -127,35 +125,15 @@ function startSpillTimer() {
 
       updateDisplay();
 
-      // Restart the 1.5-second countdown.
+      // Reset the interval so water spills every 1.5 seconds.
       tripStartedAt = Date.now();
 
       if (water <= 0) {
-        stopSpillTimer();
-        endGame(false, "Out of water! Mission Failed.");
+        endGame(false, "Out of Water! Mission Failed.");
       }
     }
-  }, 250);
-}
-
-  // Lose points and water when the route takes too long.
-  score = Math.max(0, score - 5);
-  water = Math.max(0, water - 1);
-
-  mapMessage.textContent =
-    "💦 Water spilled! -1 water supply and -5 points!";
-
-  if (mapTruck) {
-    mapTruck.classList.add("spilling");
-  }
-
-  updateDisplay();
-
-    if (water <= 0) {
-      endGame(false, "Out of Water! Mission Failed.");
-    }
   }, spillTick);
-
+}
 
 function endGame(completed, text) {
   stopTimer();
