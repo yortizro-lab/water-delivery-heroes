@@ -113,22 +113,23 @@ function startSpillTimer() {
       return;
     }
 
-    if (!spillPenaltyApplied) {
-      spillPenaltyApplied = true;
-      score = Math.max(0, score - 5);
-      
-      mapMessage.textContent =
-        "💦 Water spilling! You lost 5 points!";
-     
-        mapTruck?.classList.add("spilling");
-    }
+    
+if (!spillPenaltyApplied) {
+  spillPenaltyApplied = true;
 
-    water = Math.max(
-      0,
-      water - spillRate * (spillTick / 1000)
-    );
+  // Lose points and water when the route takes too long.
+  score = Math.max(0, score - 5);
+  water = Math.max(0, water - 1);
 
-    updateDisplay();
+  mapMessage.textContent =
+    "💦 Water spilled! -1 water supply and -5 points!";
+
+  if (mapTruck) {
+    mapTruck.classList.add("spilling");
+  }
+
+  updateDisplay();
+}
 
     if (water <= 0) {
       endGame(false, "Out of Water! Mission Failed.");
