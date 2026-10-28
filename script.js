@@ -3,7 +3,7 @@
 const totalWater = 10;
 const startingTime = 30;
 const deliveryAnimationDuration = 800;
-const spillTimeLimit = 6000;
+const spillTimeLimit = 3000;
 const spillRate = 0.5;
 const spillTick = 250;
 
@@ -32,7 +32,6 @@ const playAgainButton = document.getElementById("playAgainButton");
 const deliveryMessage = document.getElementById("deliveryMessage");
 const neighborhoodMap = document.getElementById("neighborhoodMap");
 const mapMessage = document.getElementById("mapMessage");
-const drivingMode = document.getElementById("drivingMode");
 const moveButtons = {
   up: document.getElementById("moveUp"),
   down: document.getElementById("moveDown"),
@@ -93,23 +92,21 @@ function stopSpillTimer() {
   spillPenaltyApplied = false;
   mapTruck?.classList.remove("spilling");
 }
-
+   
 function startSpillTimer() {
-  if (
-    drivingMode.value !== "challenge" ||
-    spillInterval !== null ||
-    gameEnded
-  ) {
+  if (spillInterval !== null || gameEnded || deliveryInProgress) {
     return;
   }
 
   tripStartedAt = Date.now();
+
   spillInterval = window.setInterval(() => {
-    if (tripStartedAt === null || gameEnded) {
+    if (tripStartedAt === null || gameEnded || deliveryInProgress) {
       return;
     }
 
     const elapsed = Date.now() - tripStartedAt;
+
     if (elapsed < spillTimeLimit) {
       return;
     }
@@ -117,18 +114,26 @@ function startSpillTimer() {
     if (!spillPenaltyApplied) {
       spillPenaltyApplied = true;
       score = Math.max(0, score - 5);
+
       mapMessage.textContent =
-        "Water spilling! You are losing water and points!";
-      mapTruck.classList.add("spilling");
+        "💦 Water spilling! You lost 5 points!";
+
+      mapTruck?.classList.add("spilling");
     }
 
-    water = Math.max(0, water - spillRate * (spillTick / 1000));
+    water = Math.max(
+      0,
+      water - spillRate * (spillTick / 1000)
+    );
+
     updateDisplay();
+
     if (water <= 0) {
       endGame(false, "Out of Water! Mission Failed.");
     }
   }, spillTick);
 }
+
 
 function endGame(completed, text) {
   stopTimer();
@@ -322,10 +327,7 @@ async function moveTruck(direction) {
     gameStarted = true;
     startTimer();
   }
-  if (drivingMode.value === "challenge" && tripStartedAt === null) {
-    startSpillTimer();
- 
-  }
+  if 
     const reachedHouse = [...houses].find((house) => {
   return (
     !house.classList.contains("served") &&
@@ -436,7 +438,6 @@ startButton.addEventListener("click", () => {
   gameEnded = false;
   gameStarted = true;
   deliveryInProgress = false;
-  drivingMode.value = "safe";
   resetMap();
 
  startButton.disabled = false;
