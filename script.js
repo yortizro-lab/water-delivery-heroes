@@ -216,7 +216,7 @@ function resetMap() {
   houses.forEach((house, index) => {
     house.disabled = false;
     house.classList.remove("served", "selected");
-    house.textContent= `🏠<span>House ${index + 1}</span>`;
+    house.innerHTML= `🏠<span>House ${index + 1}</span>`;
     house.setAttribute("aria-label", `Select house ${index + 1} for delivery`);
   });
   
