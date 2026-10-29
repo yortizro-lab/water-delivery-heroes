@@ -238,11 +238,11 @@ if (mapTruck) {
   mapTruck.style.top = `${truckPosition.top}%`;
   mapTruck.classList.remove("delivering");
 }
-}
+
   Object.values(moveButtons).forEach((button) => {
     button.disabled = false;
   });
-
+}
 async function deliverAtHouse(house) {
   if (
     gameEnded ||
