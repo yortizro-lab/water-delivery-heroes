@@ -174,12 +174,14 @@ if (startButton) {
     "Mission Complete! All families helped! 🏆";
   mapMessage.textContent =
     "🎉 Mission Complete! You delivered water to all 10 houses!";
-} else {
+}  else {
   deliveryMessage.textContent = text;
   deliveryMessage.classList.remove("success");
   messageDisplay.textContent = text;
   mapMessage.textContent = text;
 }
+}
+
 function wait(duration) {
   return new Promise((resolve) => window.setTimeout(resolve, duration));
 }
