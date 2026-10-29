@@ -120,9 +120,7 @@ function startSpillTimer() {
       water = Math.max(0, water - 1);
       score = Math.max(0, score - 5);
 
-      console.log("Score after spill:", score)
-
-      updateDisplay();
+      tripStartedAt = Date.now();
 
       mapMessage.textContent =
         "💦 Water spilled! -1 water and -5 points!";
@@ -132,6 +130,14 @@ function startSpillTimer() {
       }
 
       updateDisplay();
+
+      console.log("Water:", water, "Score:, score");
+
+       if (water <= 0) {
+    endGame(false, "Out of Water! Mission Failed.");
+    return;
+  }
+}
 
       // Reset the interval so water spills every 1.5 seconds.
       tripStartedAt = Date.now();
@@ -143,44 +149,53 @@ function startSpillTimer() {
   }, spillTick);
 }
 
+
 function endGame(completed, text) {
   stopTimer();
   stopSpillTimer();
   gameEnded = true;
+
   const startButton = document.getElementById("startButton");
-if (startButton) {
-  startButton.textContent = completed ? "🎉 PLAY AGAIN" : "🔄 TRY AGAIN";
-  startButton.disabled = false;
-}
+
+  if (startButton) {
+    startButton.textContent = completed ? "🎉 PLAY AGAIN" : "💧 TRY AGAIN";
+    startButton.disabled = false;
+  }
+
   if (playAgainButton) {
     playAgainButton.hidden = false;
   }
-    houses.forEach((house) => {
+
+  houses.forEach((house) => {
     house.disabled = true;
   });
+
   Object.values(moveButtons).forEach((button) => {
     button.disabled = true;
   });
 
   if (completed) {
-  if (currentLevel === 1 && level2Button) {
-    level2Button.hidden = false;
-  }
+    if (currentLevel === 1 && level2Button) {
+      level2Button.hidden = false;
+      level2Button.style.display = "inline-block";
+      level2Button.disabled = false;
+    }
 
-  deliveryMessage.textContent =
-    `🎉 Mission complete! Final score: ${score}.`;
-  deliveryMessage.classList.add("success");
-  messageDisplay.textContent =
-    "Mission Complete! All families helped! 🏆";
-  mapMessage.textContent =
-    "🎉 Mission Complete! You delivered water to all 10 houses!";
-}  else {
-  deliveryMessage.textContent = text;
-  deliveryMessage.classList.remove("success");
-  messageDisplay.textContent = text;
-  mapMessage.textContent = text;
+    deliveryMessage.textContent =
+      `🎉 Mission complete! Final score: ${score}.`;
+    deliveryMessage.classList.add("success");
+    messageDisplay.textContent =
+      "Mission Complete! All families helped! 🏆";
+    mapMessage.textContent =
+      "🎉 Mission Complete! You delivered water to all the families!";
+  } else {
+    deliveryMessage.textContent = text;
+    deliveryMessage.classList.remove("success");
+    messageDisplay.textContent = text;
+    mapMessage.textContent = text;
+  }
 }
-}
+
 
 function wait(duration) {
   return new Promise((resolve) => window.setTimeout(resolve, duration));
@@ -297,9 +312,16 @@ async function deliverAtHouse(house) {
   await wait(deliveryAnimationDuration);
   mapTruck.classList.remove("delivering");
 
-  if (families === houses.length) {
-    endGame(true);
-  } else {
+  
+if (families === houses.length) {
+  if (currentLevel === 1 && level2Button) {
+    level2Button.hidden = false;
+    level2Button.style.display = "inline-block";
+    level2Button.disabled = false;
+  }
+
+  endGame(true);
+} else {
     deliveryInProgress = false;
     selectedHouse = null;
     startTimer();
@@ -503,11 +525,16 @@ level2Button.addEventListener("click", () => {
 
   resetMap();
 
-  startButton.disabled = true;
-  startButton.textContent = "LEVEL 2 RUNNING";
   level2Button.hidden = true;
+  level2Button.style.display ="none";
+
+  startButton.disabled = "true";
+  startButton.textContent = "LEVEL 2 RUNNING";
+
 
   updateDisplay();
+  startTime();
+
   messageDisplay.textContent = "Level 2: A new water delivery challenge! 💧";
   mapMessage.textContent = "Level 2 started! Deliver water before time runs out.";
   startTimer();
