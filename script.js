@@ -106,38 +106,39 @@ function startSpillTimer() {
     return;
   }
 
-  tripStartedAt = Date.now();
+  if (tripStartedAt === null) {
+    tripStartedAt = Date.now();
+  }
 
   spillInterval = window.setInterval(() => {
-    if (gameEnded || !gameStarted) {
-  stopSpillTimer();
-  return;
-}
+    if (gameEnded || !gameStarted || !deliveryInProgress) {
+      stopSpillTimer();
+      return;
+    }
 
     const elapsed = Date.now() - tripStartedAt;
 
-  
-if (elapsed >= spillTimeLimit) {
-  water = Math.max(0, water - 1);
-  score = Math.max(0, score - 5);
+    if (elapsed >= spillTimeLimit) {
+      water = Math.max(0, water - 1);
+      score = Math.max(0, score - 5);
 
-  updateDisplay();
+      updateDisplay();
 
-  mapMessage.textContent =
-    "💦 Water spilled! -1 water and -5 points!";
+      mapMessage.textContent =
+        "💦 Water spilled! -1 water and -5 points!";
 
-  if (mapTruck) {
-    mapTruck.classList.add("spilling");
-  }
+      if (mapTruck) {
+        mapTruck.classList.add("spilling");
+      }
 
-  tripStartedAt = Date.now();
+      tripStartedAt = Date.now();
 
-  if (water <= 0) {
-    endGame(false, "Out of Water! Mission Failed.");
-    return;
-  }
-}
-}, spillTick);
+      if (water <= 0) {
+        endGame(false, "Out of Water! Mission Failed.");
+        return;
+      }
+    }
+  }, spillTick);
 }
 
 
@@ -537,7 +538,7 @@ level2Button.addEventListener("click", () => {
   "Watch your water and score while driving.";
   deliveryMessage.classList.remove("success");
   mapMessage.textContent =
-  "Level 2: Deliver water before time runs out!":
+  "Level 2: Deliver water before time runs out!";
 
   startTimer();
 });
