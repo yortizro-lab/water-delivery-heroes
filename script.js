@@ -105,10 +105,10 @@ function startSpillTimer() {
   tripStartedAt = Date.now();
 
   spillInterval = window.setInterval(() => {
-    if (gameEnded || !gameStarted || !deliveryInProgress) {
-      stopSpillTimer();
-      return;
-    }
+    if (gameEnded || !gameStarted) {
+  stopSpillTimer();
+  return;
+}
 
     const elapsed = Date.now() - tripStartedAt;
 
