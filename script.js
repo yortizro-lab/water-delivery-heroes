@@ -163,25 +163,23 @@ if (startButton) {
   });
 
   if (completed) {
-    if (currentLevel === 1 && level2Button)
-      level2Button.hidden =false;
+  if (currentLevel === 1 && level2Button) {
+    level2Button.hidden = false;
   }
 
-    deliveryMessage.textContent =
-      `🎉 Mission complete! Final score: ${score}. Time remaining: ${timerDisplay.textContent}.`;
-   
-      deliveryMessage.classList.add("success");
-    messageDisplay.textContent = "Mission Complete! All 10 families helped! 🏆";
-    mapMessage.textContent =
-      "🎉 Mission Complete! You delivered water to all 10 houses!";
-  } else {
-    deliveryMessage.textContent = text;
-    deliveryMessage.classList.remove("success");
-    messageDisplay.textContent = text;
-    mapMessage.textContent = text;
-  }
+  deliveryMessage.textContent =
+    `🎉 Mission complete! Final score: ${score}.`;
+  deliveryMessage.classList.add("success");
+  messageDisplay.textContent =
+    "Mission Complete! All families helped! 🏆";
+  mapMessage.textContent =
+    "🎉 Mission Complete! You delivered water to all 10 houses!";
+} else {
+  deliveryMessage.textContent = text;
+  deliveryMessage.classList.remove("success");
+  messageDisplay.textContent = text;
+  mapMessage.textContent = text;
 }
-
 function wait(duration) {
   return new Promise((resolve) => window.setTimeout(resolve, duration));
 }
@@ -493,7 +491,7 @@ level2Button.addEventListener("click", () => {
   stopTimer();
   stopSpillTimer();
 
-  water = totalWater;
+  water = total2Water;
   score = 0;
   families = 0;
   timeRemaining = level2Time;
