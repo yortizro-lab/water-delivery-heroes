@@ -21,7 +21,6 @@ let tripStartedAt = null;
 let spillPenaltyApplied = false;
 let gameStarted = false;
 let currenLevel = 1;
-const level2Time = 25;
 let gameEnded = false;
 let deliveryInProgress = false;
 
