@@ -336,6 +336,7 @@ async function moveTruck(direction) {
   //Start the water-spill timer while driving
   if (gameStarted && !gameEnded) {
   startSpillTimer();
+  console.log("Spill timer started!");
 }
   mapMessage.textContent = "🚚 Driving...";
 
