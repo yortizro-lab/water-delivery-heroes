@@ -144,8 +144,10 @@ if (startButton) {
   startButton.textContent = completed ? "🎉 PLAY AGAIN" : "🔄 TRY AGAIN";
   startButton.disabled = false;
 }
-  playAgainButton.hidden = false;
-  houses.forEach((house) => {
+  if (playAgainButton) {
+    playAgainButton.hidden = false;
+  }
+    houses.forEach((house) => {
     house.disabled = true;
   });
   Object.values(moveButtons).forEach((button) => {
@@ -336,7 +338,7 @@ async function moveTruck(direction) {
   startSpillTimer();
 }
   mapMessage.textContent = "🚚 Driving...";
-  
+
   if (!gameStarted) {
     gameStarted = true;
     startTimer();
