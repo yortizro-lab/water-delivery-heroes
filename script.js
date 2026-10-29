@@ -116,6 +116,10 @@ function startSpillTimer() {
       water = Math.max(0, water - 1);
       score = Math.max(0, score - 5);
 
+      console.log("Score after spill:", score)
+
+      updateDisplay();
+
       mapMessage.textContent =
         "💦 Water spilled! -1 water and -5 points!";
 
