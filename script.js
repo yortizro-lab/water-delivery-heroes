@@ -2,6 +2,8 @@
 
 const totalWater = 10;
 const startingTime = 30;
+const level2Time = 25;
+const level2Water = 5;
 const deliveryAnimationDuration = 800;
 const spillTimeLimit = 1500;
 const spillRate = 0.5;
@@ -18,6 +20,8 @@ let spillInterval = null;
 let tripStartedAt = null;
 let spillPenaltyApplied = false;
 let gameStarted = false;
+let currenLevel = 1;
+const level2Time = 25;
 let gameEnded = false;
 let deliveryInProgress = false;
 
@@ -27,6 +31,7 @@ const deliveryProgress = document.getElementById("deliveryProgress");
 const waterDisplay = document.getElementById("water");
 const scoreDisplay = document.getElementById("score");
 const startButton = document.getElementById ("startButton");
+const level2Button = document.getElementById("level2Button");
 const familiesDisplay = document.getElementById("families");
 const timerDisplay = document.getElementById("timer");
 const messageDisplay = document.getElementById("message");
@@ -159,9 +164,14 @@ if (startButton) {
   });
 
   if (completed) {
+    if (currentLevel === 1 && level2Button)
+      level2Button.hidden =false;
+  }
+
     deliveryMessage.textContent =
       `🎉 Mission complete! Final score: ${score}. Time remaining: ${timerDisplay.textContent}.`;
-    deliveryMessage.classList.add("success");
+   
+      deliveryMessage.classList.add("success");
     messageDisplay.textContent = "Mission Complete! All 10 families helped! 🏆";
     mapMessage.textContent =
       "🎉 Mission Complete! You delivered water to all 10 houses!";
@@ -477,4 +487,29 @@ startButton.addEventListener("click", () => {
 
   startTimer();
   updateDisplay ();
+});
+
+level2Button.addEventListener("click", () => {
+  currentLevel = 2;
+  stopTimer();
+  stopSpillTimer();
+
+  water = totalWater;
+  score = 0;
+  families = 0;
+  timeRemaining = level2Time;
+  gameEnded = false;
+  gameStarted = true;
+  deliveryInProgress = false;
+
+  resetMap();
+
+  startButton.disabled = true;
+  startButton.textContent = "LEVEL 2 RUNNING";
+  level2Button.hidden = true;
+
+  updateDisplay();
+  messageDisplay.textContent = "Level 2: A new water delivery challenge! 💧";
+  mapMessage.textContent = "Level 2 started! Deliver water before time runs out.";
+  startTimer();
 });
