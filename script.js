@@ -116,37 +116,28 @@ function startSpillTimer() {
 
     const elapsed = Date.now() - tripStartedAt;
 
-    if (elapsed >= spillTimeLimit) {
-      water = Math.max(0, water - 1);
-      score = Math.max(0, score - 5);
+  
+if (elapsed >= spillTimeLimit) {
+  water = Math.max(0, water - 1);
+  score = Math.max(0, score - 5);
 
-      tripStartedAt = Date.now();
+  updateDisplay();
 
-      mapMessage.textContent =
-        "💦 Water spilled! -1 water and -5 points!";
+  mapMessage.textContent =
+    "💦 Water spilled! -1 water and -5 points!";
 
-      if (mapTruck) {
-        mapTruck.classList.add("spilling");
-      }
+  if (mapTruck) {
+    mapTruck.classList.add("spilling");
+  }
 
-      updateDisplay();
+  tripStartedAt = Date.now();
 
-      console.log("Water:", water, "Score:, score");
-
-       if (water <= 0) {
+  if (water <= 0) {
     endGame(false, "Out of Water! Mission Failed.");
     return;
   }
 }
-
-      // Reset the interval so water spills every 1.5 seconds.
-      tripStartedAt = Date.now();
-
-      if (water <= 0) {
-        endGame(false, "Out of Water! Mission Failed.");
-      }
-    }
-  }, spillTick);
+}, spillTick);
 }
 
 
@@ -312,12 +303,15 @@ async function deliverAtHouse(house) {
   await wait(deliveryAnimationDuration);
   mapTruck.classList.remove("delivering");
 
+  console.log("Families helped:", families);
+console.log("Total houses:", houses.length);
   
 if (families === houses.length) {
   if (currentLevel === 1 && level2Button) {
     level2Button.hidden = false;
     level2Button.style.display = "inline-block";
     level2Button.disabled = false;
+    level2Button.textContent = "🌎 START LEVEL 2 ";
   }
 
   endGame(true);
@@ -515,27 +509,35 @@ level2Button.addEventListener("click", () => {
   stopTimer();
   stopSpillTimer();
 
-  water = total2Water;
+  water = level2Water;
   score = 0;
   families = 0;
   timeRemaining = level2Time;
+
   gameEnded = false;
   gameStarted = true;
   deliveryInProgress = false;
+  selectedHouse = null;
 
   resetMap();
 
   level2Button.hidden = true;
   level2Button.style.display ="none";
 
-  startButton.disabled = "true";
-  startButton.textContent = "LEVEL 2 RUNNING";
+  startButton.disabled = true ;
+  startButton.textContent = "🚚 LEVEL 2 RUNNING";
 
 
   updateDisplay();
-  startTime();
 
-  messageDisplay.textContent = "Level 2: A new water delivery challenge! 💧";
-  mapMessage.textContent = "Level 2 started! Deliver water before time runs out.";
+
+  messageDisplay.textContent = 
+     "Level 2 started!: Help 5 families in 25 seconds! 💧";
+  mapMessage.textContent = 
+  "Watch your water and score while driving.";
+  deliveryMessage.classList.remove("success");
+  mapMessage.textContent =
+  "Level 2: Deliver water before time runs out!":
+
   startTimer();
 });
