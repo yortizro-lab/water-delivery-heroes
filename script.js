@@ -315,7 +315,7 @@ if (families >= (currentLevel === 2 ? 5 : houses.length )) {
     startTimer();
   }
 }
-
+}
 async function moveTruck(direction) {
   if (gameEnded || deliveryInProgress) {
     return;
@@ -532,6 +532,6 @@ level2Button.addEventListener("click", () => {
   deliveryMessage.classList.remove("success");
   mapMessage.textContent =
   "Level 2: Deliver water before time runs out!";
-
+  
   startTimer();
 });
