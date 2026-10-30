@@ -1,13 +1,30 @@
 /* Water Delivery Heroes - Game Logic */
 
-// Level settings (array of objects)
+// Level settings (array of objects). "houses" lists which houses appear.
 const levels = [
-  { water: 12, time: 30, goal: 10 },
-  { water: 7, time: 25, goal: 5 }
+  { water: 12, time: 30, houses: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9], hospital: false },
+  { water: 9, time: 25, houses: [0, 2, 4, 6, 8], hospital: true }
 ];
 
+// Difficulty modes change water, time and how fast water spills.
+const difficulties = {
+  easy: { water: 2, time: 10, spill: 2500 },
+  normal: { water: 0, time: 0, spill: 1500 },
+  hard: { water: -2, time: -8, spill: 1000 }
+};
+
+// Milestone messages shown when the score reaches each value.
+const milestones = [
+  { score: 30, text: "🌱 Great start! 3 deliveries worth of hope!" },
+  { score: 50, text: "💪 Halfway hero! Keep the water flowing!" },
+  { score: 70, text: "🌟 Amazing! Almost every family has clean water!" },
+  { score: 100, text: "🏆 Perfect score! You are a Water Delivery Hero!" }
+];
+const reachedMilestones = [];
+
+const hospitalCost = 2;
+const hospitalPoints = 20;
 const deliveryAnimationDuration = 800;
-const spillTimeLimit = 1500;
 const spillTick = 250;
 
 let water = levels[0].water;
@@ -17,6 +34,7 @@ let timeRemaining = levels[0].time;
 let timerInterval = null;
 let spillInterval = null;
 let tripStartedAt = null;
+let difficulty = "normal";
 let gameStarted = false;
 let currentLevel = 1;
 let gameEnded = false;
@@ -39,8 +57,12 @@ const mapMessage = document.getElementById("mapMessage");
 const mapDeliveries = document.getElementById("mapDeliveries");
 const mapTruck = neighborhoodMap?.querySelector(".map-truck");
 const houses = neighborhoodMap
-  ? neighborhoodMap.querySelectorAll(".map-house")
+  ? neighborhoodMap.querySelectorAll(".map-house:not(.map-hospital)")
   : [];
+const hospital = neighborhoodMap?.querySelector(".map-hospital") ?? null;
+const allStops = hospital ? [...houses, hospital] : [...houses];
+const difficultySelect = document.getElementById("difficulty");
+const milestoneDisplay = document.getElementById("milestone");
 const moveButtons = {
   up: document.getElementById("moveUp"),
   down: document.getElementById("moveDown"),
@@ -54,8 +76,61 @@ const startPosition = { left: 50, top: 40 };
 let truckPosition = { ...startPosition };
 let selectedHouse = null;
 
-const getLevel = () => levels[currentLevel - 1];
-const getGoal = () => Math.min(getLevel().goal, houses.length);
+const getLevel = () => {
+  const base = levels[currentLevel - 1];
+  const mode = difficulties[difficulty];
+  return {
+    ...base,
+    water: Math.max(1, base.water + mode.water),
+    time: Math.max(10, base.time + mode.time)
+  };
+};
+
+// Simple sound effects made with the Web Audio API (no files needed).
+let audioContext = null;
+function playTone(notes) {
+  try {
+    audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
+    notes.forEach(([frequency, start, length, type]) => {
+      const osc = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      osc.type = type || "sine";
+      osc.frequency.value = frequency;
+      gain.gain.setValueAtTime(0.15, audioContext.currentTime + start);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + start + length);
+      osc.connect(gain);
+      gain.connect(audioContext.destination);
+      osc.start(audioContext.currentTime + start);
+      osc.stop(audioContext.currentTime + start + length);
+    });
+  } catch (error) {
+    // Sound is optional; ignore audio errors.
+  }
+}
+const sounds = {
+  deliver: () => playTone([[660, 0, 0.12], [880, 0.12, 0.18]]),
+  spill: () => playTone([[220, 0, 0.25, "sawtooth"]]),
+  win: () => playTone([[523, 0, 0.15], [659, 0.15, 0.15], [784, 0.3, 0.15], [1047, 0.45, 0.3]]),
+  lose: () => playTone([[392, 0, 0.2, "square"], [294, 0.2, 0.2, "square"], [196, 0.4, 0.35, "square"]])
+};
+
+function checkMilestones() {
+  milestones.forEach((milestone) => {
+    if (score >= milestone.score && !reachedMilestones.includes(milestone.score)) {
+      reachedMilestones.push(milestone.score);
+      if (milestoneDisplay) {
+        milestoneDisplay.textContent = milestone.text;
+      }
+    }
+  });
+}
+const getGoal = () => getLevel().houses.length + (getLevel().hospital ? 1 : 0);
+const getActiveStops = () => allStops.filter((stop) => !stop.hidden);
+
+function setStopVisible(stop, visible) {
+  stop.hidden = !visible;
+  stop.style.display = visible ? "" : "none";
+}
 
 function setMoveButtonsDisabled(disabled) {
   Object.values(moveButtons).forEach((button) => {
@@ -140,7 +215,7 @@ function startSpillTimer() {
       return;
     }
 
-    if (Date.now() - tripStartedAt < spillTimeLimit) {
+    if (Date.now() - tripStartedAt < difficulties[difficulty].spill) {
       return;
     }
 
@@ -151,6 +226,7 @@ function startSpillTimer() {
     updateDisplay();
     mapMessage.textContent = "💦 Water spilled! -1 water and -5 points!";
     mapTruck?.classList.add("spilling");
+    sounds.spill();
 
     if (water <= 0) {
       endGame(false, "Out of Water! Mission Failed.");
@@ -175,10 +251,18 @@ function endGame(completed, text) {
     playAgainButton.hidden = false;
   }
 
-  houses.forEach((house) => {
-    house.disabled = true;
+  allStops.forEach((stop) => {
+    stop.disabled = true;
   });
   setMoveButtonsDisabled(true);
+  if (difficultySelect) {
+    difficultySelect.disabled = false;
+  }
+  if (completed) {
+    sounds.win();
+  } else {
+    sounds.lose();
+  }
 
   if (completed) {
     if (currentLevel === 1 && level2Button) {
@@ -192,7 +276,7 @@ function endGame(completed, text) {
     deliveryMessage.classList.add("success");
     messageDisplay.textContent = "Mission Complete! All families helped! 🏆";
     mapMessage.textContent =
-      "🎉 Mission Complete! You delivered water to all the families!";
+      "🎉 Mission Complete! You delivered water to everyone!";
   } else {
     deliveryMessage.textContent = text;
     deliveryMessage.classList.remove("success");
@@ -218,7 +302,7 @@ function refreshMap() {
     : 0;
 
   if (mapDeliveries) {
-    mapDeliveries.textContent = `${served} houses served`;
+    mapDeliveries.textContent = `${served} of ${getGoal()} stops served`;
   }
 }
 
@@ -230,12 +314,25 @@ function resetMap() {
   selectedHouse = null;
   deliveryInProgress = false;
 
+  let shown = 0;
   houses.forEach((house, index) => {
+    const visible = getLevel().houses.includes(index);
+    setStopVisible(house, visible);
     house.disabled = false;
     house.classList.remove("served", "selected");
-    house.innerHTML = `🏠<span>House ${index + 1}</span>`;
-    house.setAttribute("aria-label", `House ${index + 1}`);
+    if (visible) {
+      shown += 1;
+      house.innerHTML = `🏠<span>House ${shown}</span>`;
+      house.setAttribute("aria-label", `House ${shown}`);
+    }
   });
+
+  if (hospital) {
+    setStopVisible(hospital, getLevel().hospital);
+    hospital.disabled = false;
+    hospital.classList.remove("served", "selected");
+    hospital.innerHTML = `🏥<span>Hospital</span>`;
+  }
 
   if (mapMessage) {
     mapMessage.textContent = "Press START, then drive the truck! 🚚";
@@ -251,10 +348,10 @@ function resetMap() {
   refreshMap();
 }
 
-function isTruckAtHouse(house) {
+function isTruckAtHouse(stop) {
   return (
-    truckPosition.left === parseFloat(house.style.left) &&
-    truckPosition.top === parseFloat(house.style.top)
+    truckPosition.left === parseFloat(stop.style.left) &&
+    truckPosition.top === parseFloat(stop.style.top)
   );
 }
 
@@ -268,7 +365,11 @@ async function deliverAtHouse(house) {
     return;
   }
 
-  if (water < 1) {
+  const isHospital = house === hospital;
+  const cost = isHospital ? hospitalCost : 1;
+  const points = isHospital ? hospitalPoints : 10;
+
+  if (water < cost) {
     endGame(false, "Out of Water! Mission Failed.");
     return;
   }
@@ -286,14 +387,18 @@ async function deliverAtHouse(house) {
   drop.textContent = "💧";
   house.appendChild(drop);
 
-  water = Math.max(0, water - 1);
-  score += 10;
+  water = Math.max(0, water - cost);
+  score += points;
   families += 1;
 
   updateDisplay();
   refreshMap();
+  sounds.deliver();
+  checkMilestones();
 
-  mapMessage.textContent = "💧 Water delivered! +10 points.";
+  mapMessage.textContent = isHospital
+    ? "🏥 Hospital supplied! +20 points."
+    : "💧 Water delivered! +10 points.";
   deliveryMessage.textContent = "Keep going! Every drop helps a family. 💧";
   deliveryMessage.classList.remove("success");
 
@@ -356,8 +461,8 @@ async function moveTruck(direction) {
   mapTruck.style.top = `${truckPosition.top}%`;
   mapMessage.textContent = "🚚 Driving...";
 
-  const reachedHouse = [...houses].find(
-    (house) => !house.classList.contains("served") && isTruckAtHouse(house)
+  const reachedHouse = getActiveStops().find(
+    (stop) => !stop.classList.contains("served") && isTruckAtHouse(stop)
   );
 
   if (reachedHouse) {
@@ -369,12 +474,12 @@ async function moveTruck(direction) {
 
 /* ---------- Events ---------- */
 
-houses.forEach((house) => {
-  house.addEventListener("click", () => {
-    if (house.disabled || deliveryInProgress || gameEnded) {
+allStops.forEach((stop) => {
+  stop.addEventListener("click", () => {
+    if (stop.disabled || deliveryInProgress || gameEnded) {
       return;
     }
-    mapMessage.textContent = "🚚 Use the arrows to drive to a house!";
+    mapMessage.textContent = "🚚 Use the arrows to drive to a stop!";
   });
 });
 
@@ -405,7 +510,15 @@ document.addEventListener("keydown", (event) => {
 
 function startLevel(level) {
   currentLevel = level;
+  if (difficultySelect) {
+    difficulty = difficultySelect.value;
+    difficultySelect.disabled = true;
+  }
   const { water: startWater, time } = getLevel();
+  reachedMilestones.length = 0;
+  if (milestoneDisplay) {
+    milestoneDisplay.textContent = "";
+  }
 
   stopTimer();
   stopSpillTimer();
@@ -439,8 +552,8 @@ function startLevel(level) {
   messageDisplay.textContent =
     level === 1
       ? "Game started! 🚚"
-      : `Level 2: Help ${getGoal()} families in ${time} seconds! 💧`;
-  mapMessage.textContent = "Use the arrow buttons to drive to each house.";
+      : `Level 2: Help 5 houses and the hospital in ${time} seconds! 🏥`;
+  mapMessage.textContent = "Use the arrow buttons to drive to each stop.";
 
   updateDisplay();
   startTimer();
@@ -457,6 +570,16 @@ level2Button?.addEventListener("click", () => startLevel(2));
 
 playAgainButton?.addEventListener("click", () => startLevel(currentLevel));
 
+difficultySelect?.addEventListener("change", () => {
+  if (gameStarted && !gameEnded) {
+    return;
+  }
+  difficulty = difficultySelect.value;
+  water = getLevel().water;
+  timeRemaining = getLevel().time;
+  updateDisplay();
+});
+
 /* ---------- Initial state ---------- */
 
 gameEnded = false;
@@ -471,6 +594,8 @@ if (level2Button) {
 if (playAgainButton) {
   playAgainButton.hidden = true;
 }
+water = getLevel().water;
+timeRemaining = getLevel().time;
 updateDisplay();
 
 messageDisplay.textContent = "Ready to make a difference? 💧";

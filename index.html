@@ -6,7 +6,19 @@
   <title>Water Delivery Heroes</title>
 
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Montserrat is a close match to charity: water's Proxima Nova brand font. */
+    body, button, select, h1, h2, h3, p, li, span {
+      font-family: "Proxima Nova", "Montserrat", Arial, sans-serif;
+    }
+    footer a { color: #FFC907; font-weight: 600; margin: 0 0.5rem; }
+    #milestone:empty { display: none; }
+    #milestone { font-weight: 800; text-align: center; }
+  </style>
 </head>
 
 <body>
@@ -30,6 +42,13 @@
         <p>Families Helped: <span id="families">0</span></p>
       </div>
 
+      <label for="difficulty">Difficulty:</label>
+      <select id="difficulty">
+        <option value="easy">Easy (more time and water)</option>
+        <option value="normal" selected>Normal</option>
+        <option value="hard">Hard (less time, faster spills)</option>
+      </select>
+
       <button id="startButton" type="button">▶ START GAME</button>
       <button id="level2Button" type="button" hidden>🌎 START LEVEL 2</button>
       <button id="playAgainButton" type="button" hidden>🔁 PLAY AGAIN</button>
@@ -39,7 +58,7 @@
       <div id="neighborhoodMap" class="neighborhood-map">
         <div class="map-heading">
           <span>🏘️ Neighborhood Map</span>
-          <span id="mapDeliveries">0 houses served</span>
+          <span id="mapDeliveries">0 stops served</span>
         </div>
         <div class="map-scene">
           <svg class="road-map" viewBox="0 0 100 100" aria-hidden="true">
@@ -80,6 +99,9 @@
           <button class="map-house" data-house="9" style="left:37%;top:82%" aria-label="House 10">
             🏠<span>House 10</span>
           </button>
+          <button class="map-house map-hospital" style="left:50%;top:82%" aria-label="Hospital" hidden>
+            🏥<span>Hospital</span>
+          </button>
         </div>
       </div>
 
@@ -90,6 +112,7 @@
         <button id="moveRight" type="button" aria-label="Move truck right">→<span>Right</span></button>
       </div>
 
+      <p id="milestone" aria-live="polite"></p>
       <p id="message" aria-live="polite">Ready to make a difference? 💧</p>
     </section>
 
@@ -122,13 +145,17 @@
         <li>Press START, then drive the truck with the arrow buttons or your keyboard arrow keys.</li>
         <li>Drive onto a house to deliver water. Each delivery helps one family (+10 points).</li>
         <li>Don't wait too long between houses: water spills after 1.5 seconds of driving (-1 water, -5 points).</li>
-        <li>Level 1: help all 10 families in 30 seconds. Level 2: help 5 families in 25 seconds with less water.</li>
+        <li>Pick Easy, Normal or Hard before you start: it changes your time, water and how fast water spills. Level 1: help all 10 families in 30 seconds. Level 2: help 5 houses and the hospital in 25 seconds. The hospital needs 2 water.</li>
       </ul>
     </section>
   </main>
 
   <footer>
     <p>Every drop makes a difference!</p>
+    <p>
+      <a href="https://www.charitywater.org" target="_blank" rel="noopener noreferrer">charity: water</a>
+      <a href="https://www.charitywater.org/donate" target="_blank" rel="noopener noreferrer">Donate</a>
+    </p>
   </footer>
 
   <script src="script.js" defer></script>
