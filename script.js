@@ -20,7 +20,7 @@ let spillInterval = null;
 let tripStartedAt = null;
 let spillPenaltyApplied = false;
 let gameStarted = false;
-let currenLevel = 1;
+let currentLevel = 1;
 let gameEnded = false;
 let deliveryInProgress = false;
 
@@ -79,28 +79,19 @@ function startTimer() {
   }
 
   timerInterval = window.setInterval(() => {
-    timeRemaining -= 1;
+    if (!gameStarted || gameEnded) {
+      stopTimer();
+      return;
+    }
+  timeRemaining = Math.max(0, timeRemaining - 1);
     updateDisplay();
-    if (timeRemaining <= 0) {
-      timeRemaining = 0;
-      updateDisplay();
+
+   if (timeRemaining <= 0) {
       endGame(false, "Time's Up! Try Again!");
     }
   }, 1000);
-}
-
-function stopSpillTimer() {
-  if (spillInterval !== null) {
-    window.clearInterval(spillInterval);
-    spillInterval = null;
-  }
-  tripStartedAt = null;
-  spillPenaltyApplied = false;
-  mapTruck?.classList.remove("spilling");
-}
+ }
    
-
-
 function startSpillTimer() {
   if (spillInterval !== null || gameEnded || !gameStarted) {
     return;
@@ -110,12 +101,10 @@ function startSpillTimer() {
     tripStartedAt = Date.now();
   }
 
-  spillInterval = window.setInterval(() => {
-    if (gameEnded || !gameStarted || !deliveryInProgress) {
-      stopSpillTimer();
-      return;
-    }
-
+  if (gameEnded || !gameStarted) {
+  stopSpillTimer();
+  return;
+}
     const elapsed = Date.now() - tripStartedAt;
 
     if (elapsed >= spillTimeLimit) {
@@ -143,10 +132,13 @@ function startSpillTimer() {
 
 
 function endGame(completed, text) {
+  gameEnded = true;
+  gameStarted = false;
+
   stopTimer();
   stopSpillTimer();
-  gameEnded = true;
 
+  
   const startButton = document.getElementById("startButton");
 
   if (startButton) {
@@ -307,7 +299,7 @@ async function deliverAtHouse(house) {
   console.log("Families helped:", families);
 console.log("Total houses:", houses.length);
   
-if (families === houses.length) {
+if (families >= (currentLevel === 2 ? 5 : houses.length )) {
   if (currentLevel === 1 && level2Button) {
     level2Button.hidden = false;
     level2Button.style.display = "inline-block";
@@ -317,8 +309,10 @@ if (families === houses.length) {
 
   endGame(true);
 } else {
-    deliveryInProgress = false;
-    selectedHouse = null;
+  deliveryInProgress = false;
+  selectedHouse = null;
+
+  if (!gameEnded) {
     startTimer();
   }
 }
