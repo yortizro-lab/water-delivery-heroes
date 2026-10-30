@@ -127,8 +127,7 @@ function startSpillTimer() {
         return;
       }
     }
-  }, spillTick);
-}
+  }
 
 
 function endGame(completed, text) {
@@ -138,7 +137,7 @@ function endGame(completed, text) {
   stopTimer();
   stopSpillTimer();
 
-  
+
   const startButton = document.getElementById("startButton");
 
   if (startButton) {
