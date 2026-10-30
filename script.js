@@ -1,24 +1,22 @@
 /* Water Delivery Heroes - Game Logic */
 
-const totalWater = 10;
-const startingTime = 30;
-const level2Time = 25;
-const level2Water = 5;
+// Level settings (array of objects)
+const levels = [
+  { water: 12, time: 30, goal: 10 },
+  { water: 7, time: 25, goal: 5 }
+];
+
 const deliveryAnimationDuration = 800;
 const spillTimeLimit = 1500;
-const spillRate = 0.5;
 const spillTick = 250;
-const spillDistanceLimit = 15;
 
-
-let water = totalWater;
+let water = levels[0].water;
 let score = 0;
 let families = 0;
-let timeRemaining = startingTime;
+let timeRemaining = levels[0].time;
 let timerInterval = null;
 let spillInterval = null;
 let tripStartedAt = null;
-let spillPenaltyApplied = false;
 let gameStarted = false;
 let currentLevel = 1;
 let gameEnded = false;
@@ -29,7 +27,7 @@ const progressFill = document.getElementById("progressFill");
 const deliveryProgress = document.getElementById("deliveryProgress");
 const waterDisplay = document.getElementById("water");
 const scoreDisplay = document.getElementById("score");
-const startButton = document.getElementById ("startButton");
+const startButton = document.getElementById("startButton");
 const level2Button = document.getElementById("level2Button");
 const familiesDisplay = document.getElementById("families");
 const timerDisplay = document.getElementById("timer");
@@ -38,6 +36,11 @@ const playAgainButton = document.getElementById("playAgainButton");
 const deliveryMessage = document.getElementById("deliveryMessage");
 const neighborhoodMap = document.getElementById("neighborhoodMap");
 const mapMessage = document.getElementById("mapMessage");
+const mapDeliveries = document.getElementById("mapDeliveries");
+const mapTruck = neighborhoodMap?.querySelector(".map-truck");
+const houses = neighborhoodMap
+  ? neighborhoodMap.querySelectorAll(".map-house")
+  : [];
 const moveButtons = {
   up: document.getElementById("moveUp"),
   down: document.getElementById("moveDown"),
@@ -45,15 +48,34 @@ const moveButtons = {
   right: document.getElementById("moveRight")
 };
 
+const roadColumns = [8, 37, 50, 70, 92];
+const roadRows = [18, 40, 64, 82];
+const startPosition = { left: 50, top: 40 };
+let truckPosition = { ...startPosition };
+let selectedHouse = null;
+
+const getLevel = () => levels[currentLevel - 1];
+const getGoal = () => Math.min(getLevel().goal, houses.length);
+
+function setMoveButtonsDisabled(disabled) {
+  Object.values(moveButtons).forEach((button) => {
+    if (button) {
+      button.disabled = disabled;
+    }
+  });
+}
+
 function updateDisplay() {
   waterDisplay.textContent = water.toFixed(1).replace(/\.0$/, "");
   scoreDisplay.textContent = score;
   familiesDisplay.textContent = families;
 
-  const percent = families * 10;
+  const goal = getGoal() || 1;
+  const percent = Math.min(100, Math.round((families / goal) * 100));
   progressText.textContent = percent + "%";
   progressFill.style.width = percent + "%";
   deliveryProgress.setAttribute("aria-valuenow", families);
+  deliveryProgress.setAttribute("aria-valuemax", goal);
 
   const minutes = Math.floor(timeRemaining / 60);
   const seconds = timeRemaining % 60;
@@ -62,9 +84,12 @@ function updateDisplay() {
 
   const tankWater = document.querySelector(".tank-water");
   if (tankWater) {
-    tankWater.style.height = `${Math.max(0, (water / totalWater) * 100)}%`;
+    const percentFull = (water / getLevel().water) * 100;
+    tankWater.style.height = `${Math.min(100, Math.max(0, percentFull))}%`;
   }
 }
+
+/* ---------- Timers ---------- */
 
 function stopTimer() {
   if (timerInterval !== null) {
@@ -83,67 +108,68 @@ function startTimer() {
       stopTimer();
       return;
     }
-  timeRemaining = Math.max(0, timeRemaining - 1);
+
+    timeRemaining = Math.max(0, timeRemaining - 1);
     updateDisplay();
 
-   if (timeRemaining <= 0) {
+    if (timeRemaining <= 0) {
       endGame(false, "Time's Up! Try Again!");
     }
   }, 1000);
- }
-   
+}
+
+function stopSpillTimer() {
+  if (spillInterval !== null) {
+    window.clearInterval(spillInterval);
+    spillInterval = null;
+  }
+  tripStartedAt = null;
+  mapTruck?.classList.remove("spilling");
+}
+
 function startSpillTimer() {
   if (spillInterval !== null || gameEnded || !gameStarted) {
     return;
   }
 
-  if (tripStartedAt === null) {
-    tripStartedAt = Date.now();
-  }
+  tripStartedAt = Date.now();
 
-  if (gameEnded || !gameStarted) {
-  stopSpillTimer();
-  return;
-}
-    const elapsed = Date.now() - tripStartedAt;
-
-    if (elapsed >= spillTimeLimit) {
-      water = Math.max(0, water - 1);
-      score = Math.max(0, score - 5);
-
-      updateDisplay();
-
-      mapMessage.textContent =
-        "💦 Water spilled! -1 water and -5 points!";
-
-      if (mapTruck) {
-        mapTruck.classList.add("spilling");
-      }
-
-      tripStartedAt = Date.now();
-
-      if (water <= 0) {
-        endGame(false, "Out of Water! Mission Failed.");
-        return;
-      }
+  spillInterval = window.setInterval(() => {
+    if (!gameStarted || gameEnded || deliveryInProgress) {
+      stopSpillTimer();
+      return;
     }
-  }
 
+    if (Date.now() - tripStartedAt < spillTimeLimit) {
+      return;
+    }
+
+    water = Math.max(0, water - 1);
+    score = Math.max(0, score - 5);
+    tripStartedAt = Date.now();
+
+    updateDisplay();
+    mapMessage.textContent = "💦 Water spilled! -1 water and -5 points!";
+    mapTruck?.classList.add("spilling");
+
+    if (water <= 0) {
+      endGame(false, "Out of Water! Mission Failed.");
+    }
+  }, spillTick);
+}
+
+/* ---------- End of game ---------- */
 
 function endGame(completed, text) {
   gameEnded = true;
   gameStarted = false;
+  deliveryInProgress = false;
 
   stopTimer();
   stopSpillTimer();
 
-
-  const startButton = document.getElementById("startButton");
-
-  if (startButton) {
-    startButton.textContent = completed ? "🎉 PLAY AGAIN" : "💧 TRY AGAIN";
-    startButton.disabled = false;
-  }
+  startButton.textContent = completed ? "🎉 PLAY AGAIN" : "💧 TRY AGAIN";
+  startButton.disabled = false;
 
   if (playAgainButton) {
     playAgainButton.hidden = false;
@@ -152,23 +178,19 @@ function endGame(completed, text) {
   houses.forEach((house) => {
     house.disabled = true;
   });
-
-  Object.values(moveButtons).forEach((button) => {
-    button.disabled = true;
-  });
+  setMoveButtonsDisabled(true);
 
   if (completed) {
     if (currentLevel === 1 && level2Button) {
       level2Button.hidden = false;
       level2Button.style.display = "inline-block";
       level2Button.disabled = false;
+      level2Button.textContent = "🌎 START LEVEL 2";
     }
 
-    deliveryMessage.textContent =
-      `🎉 Mission complete! Final score: ${score}.`;
+    deliveryMessage.textContent = `🎉 Level ${currentLevel} complete! Final score: ${score}.`;
     deliveryMessage.classList.add("success");
-    messageDisplay.textContent =
-      "Mission Complete! All families helped! 🏆";
+    messageDisplay.textContent = "Mission Complete! All families helped! 🏆";
     mapMessage.textContent =
       "🎉 Mission Complete! You delivered water to all the families!";
   } else {
@@ -179,35 +201,15 @@ function endGame(completed, text) {
   }
 }
 
-
 function wait(duration) {
   return new Promise((resolve) => window.setTimeout(resolve, duration));
 }
 
-const houses = neighborhoodMap
-  ? neighborhoodMap.querySelectorAll(".map-house")
-  : [];
-const mapDeliveries = document.getElementById("mapDeliveries");
-const mapTruck = neighborhoodMap?.querySelector(".map-truck");
-const roadColumns = [8, 37, 50, 70, 92];
-const roadRows = [18, 40, 64, 82];
-let truckPosition = { left: 50, top: 40 };
-let selectedHouse = null;
-let facingDirection = "right";
-houses.forEach((house) => {
-  house.addEventListener("click", () => {
-    // Houses no longer need to be selected manually.
-    mapMessage.textContent = "🚚 Use the arrows to drive to a house!";
-  });
-});
+/* ---------- Map ---------- */
 
 function setTruckFacing(direction) {
-  facingDirection = direction;
   const angles = { up: -90, right: 0, down: 90, left: 180 };
   mapTruck?.style.setProperty("--truck-angle", `${angles[direction]}deg`);
- if (gameStarted && !gameEnded && !deliveryInProgress) {
-  startSpillTimer();
-} 
 }
 
 function refreshMap() {
@@ -223,7 +225,7 @@ function refreshMap() {
 function resetMap() {
   stopSpillTimer();
 
-  truckPosition = { left: 50, top: 40 };
+  truckPosition = { ...startPosition };
   setTruckFacing("right");
   selectedHouse = null;
   deliveryInProgress = false;
@@ -231,32 +233,37 @@ function resetMap() {
   houses.forEach((house, index) => {
     house.disabled = false;
     house.classList.remove("served", "selected");
-    house.innerHTML= `🏠<span>House ${index + 1}</span>`;
-    house.setAttribute("aria-label", `Select house ${index + 1} for delivery`);
+    house.innerHTML = `🏠<span>House ${index + 1}</span>`;
+    house.setAttribute("aria-label", `House ${index + 1}`);
   });
-  
- if (mapMessage) {
-  mapMessage.textContent =
-    "Use the arrow buttons to drive the truck! 🚚";
+
+  if (mapMessage) {
+    mapMessage.textContent = "Press START, then drive the truck! 🚚";
+  }
+
+  if (mapTruck) {
+    mapTruck.style.left = `${truckPosition.left}%`;
+    mapTruck.style.top = `${truckPosition.top}%`;
+    mapTruck.classList.remove("delivering");
+  }
+
+  setMoveButtonsDisabled(false);
+  refreshMap();
 }
 
-if (mapTruck) {
-  mapTruck.style.left = `${truckPosition.left}%`;
-  mapTruck.style.top = `${truckPosition.top}%`;
-  mapTruck.classList.remove("delivering");
+function isTruckAtHouse(house) {
+  return (
+    truckPosition.left === parseFloat(house.style.left) &&
+    truckPosition.top === parseFloat(house.style.top)
+  );
 }
 
-  Object.values(moveButtons).forEach((button) => {
-    button.disabled = false;
-  });
-}
 async function deliverAtHouse(house) {
   if (
     gameEnded ||
     deliveryInProgress ||
     house.classList.contains("served") ||
-    truckPosition.left !== parseFloat(house.style.left) ||
-    truckPosition.top !== parseFloat(house.style.top)
+    !isTruckAtHouse(house)
   ) {
     return;
   }
@@ -271,13 +278,13 @@ async function deliverAtHouse(house) {
 
   house.classList.add("served");
   house.classList.remove("selected");
-  const drop = document.createElement ("span");
-    drop.className = "delivery-drop";
-    drop.setAttribute ("aria-hidden", "true");
-    drop.textContent = "💧";
-    house.appendChild(drop);
-    
   house.disabled = true;
+
+  const drop = document.createElement("span");
+  drop.className = "delivery-drop";
+  drop.setAttribute("aria-hidden", "true");
+  drop.textContent = "💧";
+  house.appendChild(drop);
 
   water = Math.max(0, water - 1);
   score += 10;
@@ -287,41 +294,34 @@ async function deliverAtHouse(house) {
   refreshMap();
 
   mapMessage.textContent = "💧 Water delivered! +10 points.";
-  deliveryMessage.textContent =
-    "Keep going! Every drop helps a family. 💧";
+  deliveryMessage.textContent = "Keep going! Every drop helps a family. 💧";
   deliveryMessage.classList.remove("success");
 
-  mapTruck.classList.add("delivering");
+  mapTruck?.classList.add("delivering");
   await wait(deliveryAnimationDuration);
-  mapTruck.classList.remove("delivering");
+  mapTruck?.classList.remove("delivering");
 
-  console.log("Families helped:", families);
-console.log("Total houses:", houses.length);
-  
-if (families >= (currentLevel === 2 ? 5 : houses.length )) {
-  if (currentLevel === 1 && level2Button) {
-    level2Button.hidden = false;
-    level2Button.style.display = "inline-block";
-    level2Button.disabled = false;
-    level2Button.textContent = "🌎 START LEVEL 2 ";
-  }
-
-  endGame(true);
-} else {
-  deliveryInProgress = false;
-  selectedHouse = null;
-
-  if (!gameEnded) {
-    startTimer();
-  }
-}
-}
-async function moveTruck(direction) {
-  if (gameEnded || deliveryInProgress) {
+  // The game may have ended (time ran out) during the animation.
+  if (gameEnded) {
     return;
   }
-  if (water < 1) {
+
+  if (families >= getGoal()) {
+    endGame(true);
+  } else if (water < 1) {
     endGame(false, "Out of Water! Mission Failed.");
+  } else {
+    deliveryInProgress = false;
+    selectedHouse = null;
+    startSpillTimer();
+  }
+}
+
+async function moveTruck(direction) {
+  if (!gameStarted || gameEnded || deliveryInProgress) {
+    if (!gameStarted && !gameEnded) {
+      mapMessage.textContent = "Press START first! ▶";
+    }
     return;
   }
 
@@ -352,53 +352,29 @@ async function moveTruck(direction) {
 
   setTruckFacing(direction);
   truckPosition = nextPosition;
-
   mapTruck.style.left = `${truckPosition.left}%`;
   mapTruck.style.top = `${truckPosition.top}%`;
-
-  //Start the water-spill timer while driving
-  if (gameStarted && !gameEnded) {
-  startSpillTimer();
-  console.log("Spill timer started!");
-}
   mapMessage.textContent = "🚚 Driving...";
 
-  if (!gameStarted) {
-    gameStarted = true;
-    startTimer();
-  }
-
-    const reachedHouse = [...houses].find((house) => {
-  return (
-    !house.classList.contains("served") &&
-    truckPosition.left === parseFloat(house.style.left) &&
-    truckPosition.top === parseFloat(house.style.top)
+  const reachedHouse = [...houses].find(
+    (house) => !house.classList.contains("served") && isTruckAtHouse(house)
   );
-});
 
-if (reachedHouse) {
-  await deliverAtHouse(reachedHouse);
+  if (reachedHouse) {
+    await deliverAtHouse(reachedHouse);
+  } else {
+    startSpillTimer();
+  }
 }
-}
+
+/* ---------- Events ---------- */
 
 houses.forEach((house) => {
   house.addEventListener("click", () => {
     if (house.disabled || deliveryInProgress || gameEnded) {
       return;
     }
-
-    const houseNumber = Number(house.dataset.house) + 1;
-    const nextHouseNumber = families + 1;
-    if (houseNumber !== nextHouseNumber) {
-      mapMessage.textContent = `Deliver to House ${nextHouseNumber} first!`;
-      return;
-    }
-    if (selectedHouse) {
-      selectedHouse.classList.remove("selected");
-    }
-    selectedHouse = house;
-    house.classList.add("selected");
-    mapMessage.textContent = `Drive to House ${houseNumber} with the arrow controls.`;
+    mapMessage.textContent = "🚚 Use the arrows to drive to a house!";
   });
 });
 
@@ -407,11 +383,7 @@ Object.entries(moveButtons).forEach(([direction, button]) => {
     console.error(`Missing movement button: ${direction}`);
     return;
   }
-
-  button.addEventListener("click", () => {
-    console.log(`Arrow clicked: ${direction}`);
-    moveTruck(direction);
-  });
+  button.addEventListener("click", () => moveTruck(direction));
 });
 
 document.addEventListener("keydown", (event) => {
@@ -429,84 +401,19 @@ document.addEventListener("keydown", (event) => {
   moveTruck(direction);
 });
 
+/* ---------- Starting levels ---------- */
 
-
-
-// Prepare the game when the page opens.
-gameEnded = false;
-gameStarted = false;
-deliveryInProgress = false;
-
-resetMap();
-
-// Re-enable the truck controls for the new game.
-Object.values(moveButtons).forEach((button) => {
-  if (button) {
-    button.disabled = false;
-  }
-});
-
-houses.forEach((house) => {
-  house.disabled = false;
-});
-
-selectedHouse = null;
-
-updateDisplay();
-
-messageDisplay.textContent = "Ready to make a difference? 💧";
-deliveryMessage.textContent =
-  "Keep going! Every drop helps a family. 💧";
-deliveryMessage.classList.remove("success");
-
-startButton.disabled = false;
-startButton.textContent = "▶ START GAME";
-
-// Start or restart the game when the button is clicked.
-
-startButton.addEventListener("click", () => {
-  if (gameStarted && !gameEnded) {
-    return;
-  }
+function startLevel(level) {
+  currentLevel = level;
+  const { water: startWater, time } = getLevel();
 
   stopTimer();
   stopSpillTimer();
 
-  water = totalWater;
+  water = startWater;
   score = 0;
   families = 0;
-  timeRemaining = startingTime;
-
-  gameEnded = false;
-  gameStarted = true;
-  deliveryInProgress = false;
-  resetMap();
-
- startButton.disabled = true;
- startButton.textContent = "🚚   GAME RUNNING";
- updateDisplay ();
-
-  messageDisplay.textContent = "Game started! 🚚";
-  deliveryMessage.textContent =
-    "Deliver water to the families! 💧";
-  deliveryMessage.classList.remove("success");
-
-  mapMessage.textContent =
-    "Game started! Use the arrow buttons to drive to each house.";
-
-  startTimer();
-  updateDisplay ();
-});
-
-level2Button.addEventListener("click", () => {
-  currentLevel = 2;
-  stopTimer();
-  stopSpillTimer();
-
-  water = level2Water;
-  score = 0;
-  families = 0;
-  timeRemaining = level2Time;
+  timeRemaining = time;
 
   gameEnded = false;
   gameStarted = true;
@@ -515,23 +422,60 @@ level2Button.addEventListener("click", () => {
 
   resetMap();
 
-  level2Button.hidden = true;
-  level2Button.style.display ="none";
+  if (level2Button) {
+    level2Button.hidden = true;
+    level2Button.style.display = "none";
+  }
+  if (playAgainButton) {
+    playAgainButton.hidden = true;
+  }
 
-  startButton.disabled = true ;
-  startButton.textContent = "🚚 LEVEL 2 RUNNING";
+  startButton.disabled = true;
+  startButton.textContent =
+    level === 1 ? "🚚 GAME RUNNING" : "🚚 LEVEL 2 RUNNING";
 
+  deliveryMessage.classList.remove("success");
+  deliveryMessage.textContent = "Deliver water to the families! 💧";
+  messageDisplay.textContent =
+    level === 1
+      ? "Game started! 🚚"
+      : `Level 2: Help ${getGoal()} families in ${time} seconds! 💧`;
+  mapMessage.textContent = "Use the arrow buttons to drive to each house.";
 
   updateDisplay();
-
-
-  messageDisplay.textContent = 
-     "Level 2 started!: Help 5 families in 25 seconds! 💧";
-  mapMessage.textContent = 
-  "Watch your water and score while driving.";
-  deliveryMessage.classList.remove("success");
-  mapMessage.textContent =
-  "Level 2: Deliver water before time runs out!";
-  
   startTimer();
+}
+
+startButton.addEventListener("click", () => {
+  if (gameStarted && !gameEnded) {
+    return;
+  }
+  startLevel(1);
 });
+
+level2Button?.addEventListener("click", () => startLevel(2));
+
+playAgainButton?.addEventListener("click", () => startLevel(currentLevel));
+
+/* ---------- Initial state ---------- */
+
+gameEnded = false;
+gameStarted = false;
+deliveryInProgress = false;
+
+resetMap();
+if (level2Button) {
+  level2Button.hidden = true;
+  level2Button.style.display = "none";
+}
+if (playAgainButton) {
+  playAgainButton.hidden = true;
+}
+updateDisplay();
+
+messageDisplay.textContent = "Ready to make a difference? 💧";
+deliveryMessage.textContent = "Keep going! Every drop helps a family. 💧";
+deliveryMessage.classList.remove("success");
+
+startButton.disabled = false;
+startButton.textContent = "▶ START GAME";
