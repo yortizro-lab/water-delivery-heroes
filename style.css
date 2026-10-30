@@ -351,7 +351,7 @@ canvas {
   width: 18%;
   min-height: 53px;
   padding: 3px;
-  transform: translate(-10%, -10%);
+  transform: translate(-50%, -50%);
   border: 2px solid #fff;
   border-radius: 12px;
   background: #fff;
@@ -538,4 +538,12 @@ canvas {
     animation: none;
   }
 
+}
+[hidden] {
+  display: none !important;
+}
+
+.neighborhood-map.level-2 .map-scene {
+  background: #ecdca6;
+  border-color: #c9b36b;
 }

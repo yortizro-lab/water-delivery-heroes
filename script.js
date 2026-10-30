@@ -37,6 +37,7 @@ let tripStartedAt = null;
 let difficulty = "normal";
 let gameStarted = false;
 let currentLevel = 1;
+let level2Unlocked = false;
 let gameEnded = false;
 let deliveryInProgress = false;
 
@@ -266,6 +267,7 @@ function endGame(completed, text) {
 
   if (completed) {
     if (currentLevel === 1 && level2Button) {
+      level2Unlocked = true;
       level2Button.hidden = false;
       level2Button.style.display = "inline-block";
       level2Button.disabled = false;
@@ -509,7 +511,16 @@ document.addEventListener("keydown", (event) => {
 /* ---------- Starting levels ---------- */
 
 function startLevel(level) {
+  if (level === 2 && !level2Unlocked) {
+    mapMessage.textContent = "Finish Level 1 first to unlock Level 2! 🔒";
+    return;
+  }
   currentLevel = level;
+  neighborhoodMap?.classList.toggle("level-2", level === 2);
+  const mapTitle = document.getElementById("mapTitle");
+  if (mapTitle) {
+    mapTitle.textContent = level === 2 ? "🏥 Town Map" : "🏘️ Neighborhood Map";
+  }
   if (difficultySelect) {
     difficulty = difficultySelect.value;
     difficultySelect.disabled = true;
