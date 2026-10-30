@@ -567,3 +567,12 @@ canvas {
   background: #ecdca6;
   border-color: #c9b36b;
 }
+
+#milestone {
+  font-weight: 800;
+  text-align: center;
+}
+
+#milestone:empty {
+  display: none;
+}
